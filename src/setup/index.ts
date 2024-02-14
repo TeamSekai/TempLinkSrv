@@ -5,8 +5,10 @@ const CONFIG_FILENAME = "../../config.yml";
 const DEFAULT_CONFIG_PATH = new URL(DEFAULT_CONFIG_FILENAME, import.meta.url);
 const CONFIG_PATH = new URL(CONFIG_FILENAME, import.meta.url);
 
+// プロパティ名は config.yml と一致させること
 export interface Config {
-    linkPort: number;
+    readonly linkHostname: string;
+    readonly linkPort: number;
 }
 
 async function getConfigContent() {
@@ -26,9 +28,11 @@ async function getConfig() {
             return content != null ? parse(content) : {};
         })()
     ]);
-    return Object.assign(result, config) as Config;
+    return Object.freeze(Object.assign(result, config)) as Config;
 }
 
 export const CONFIG = await getConfig();
 
-console.log("Setup is done!");
+console.log(`-- Setup is done! --
+-- Network will be allowed at: --
+${CONFIG.linkHostname}:${CONFIG.linkPort}`);

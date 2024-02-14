@@ -9,4 +9,4 @@ app.get('/', (_req, res) => {
     res.send('Hello, world!');
 });
 
-app.listen(CONFIG.linkPort);
+app.listen(CONFIG.linkPort, CONFIG.linkHostname);
