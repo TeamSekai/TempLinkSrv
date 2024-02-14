@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ACTION_NAME="TempLinkSrv"
-MAIN_FILENAME="main.ts"
+MAIN_FILENAME="src/runtime/index.ts"
 LOG_PREFIX="\e[36m[TempLinkSrv]\e[0m"
 
 pm2 --silent info ${ACTION_NAME}
