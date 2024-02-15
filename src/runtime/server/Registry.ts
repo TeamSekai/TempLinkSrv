@@ -45,7 +45,7 @@ export class Registry {
     }
 
     public getLinkById(id: string) {
-        return this.storage.selectLinkById(id);
+        return this.collector?.getCachedLink(id) ?? this.storage.selectLinkById(id);
     }
 
     public async deleteLink(id: string) {

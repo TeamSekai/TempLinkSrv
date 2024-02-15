@@ -45,6 +45,10 @@ export class Collector {
         this.timeouts.set(id, timeoutId);
     }
 
+    public getCachedLink(id: string) {
+        return this.cache.get(id) ?? null;
+    }
+
     public end() {
         clearInterval(this.updateIntervalId);
         for (const timeoutId of this.timeouts.values()) {
