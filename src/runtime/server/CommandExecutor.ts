@@ -1,7 +1,6 @@
 import { ServerConsole } from './ServerConsole.ts';
 import { Registry } from './Registry.ts';
 import { dedent } from '../util/strings.ts';
-import { TempLinkSrv } from './TempLinkSrv.ts';
 import { tempLinkSrv } from './TempLinkSrv.ts';
 
 function isWhitespace(c: string) {

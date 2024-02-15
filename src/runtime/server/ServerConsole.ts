@@ -1,4 +1,3 @@
-import { Registry } from './Registry.ts';
 import { tempLinkSrv } from './TempLinkSrv.ts';
 import { CommandExecutor } from './CommandExecutor.ts';
 
