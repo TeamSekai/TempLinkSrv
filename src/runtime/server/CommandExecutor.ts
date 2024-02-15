@@ -1,5 +1,8 @@
 import { ServerConsole } from './ServerConsole.ts';
 import { Registry } from './Registry.ts';
+import { dedent } from '../util/strings.ts';
+import { TempLinkSrv } from '../index.ts';
+import { tempLinkSrv } from '../index.ts';
 
 function isWhitespace(c: string) {
     return /\s+/.test(c);
@@ -46,6 +49,13 @@ class Parser {
         return result;
     }
 
+    public expectEnd() {
+        const rest = this.getRest();
+        if (rest != '') {
+            throw new SyntaxError(`Unexpected parameter(s) appearance: ${rest}`);
+        }
+    }
+
     private skipWhitespace() {
         const command = this.command;
         const commandLength = command.length;
@@ -64,13 +74,22 @@ export class CommandExecutor {
 
     private constructor() {}
 
-    async execute(command: string) {
+    public async execute(command: string) {
         const parser = new Parser(command);
         const commandName = parser.getWord();
         try {
             switch (commandName) {
                 case 'link-create':
                     await this.linkCreate(parser);
+                    break;
+                case 'link-info':
+                    await this.linkInfo(parser);
+                    break;
+                case 'link-delete':
+                    await this.linkDelete(parser);
+                    break;
+                case 'stop':
+                    await this.stop(parser);
                     break;
                 default:
                     await ServerConsole.instance.error(`Unknown command: ${commandName}`);
@@ -81,7 +100,7 @@ export class CommandExecutor {
         }
     }
 
-    async linkCreate(parser: Parser) {
+    private async linkCreate(parser: Parser) {
         const expirationTime = Number.parseInt(parser.getWord());
         const destination = new URL(parser.getRest());
         const id = await Registry.instance.createLink(destination, expirationTime);
@@ -90,6 +109,40 @@ export class CommandExecutor {
         } else {
             await ServerConsole.instance.log(`Created a link as '${id}'`);
         }
+    }
+
+    private async linkInfo(parser: Parser) {
+        const id = parser.getWord();
+        parser.expectEnd();
+        const record = await Registry.instance.getLinkById(id);
+        if (record == null) {
+            await ServerConsole.instance.error(`No link found by id '${id}'`);
+        } else {
+            await ServerConsole.instance.log(dedent(`
+            [Link Info]
+              id:              ${id}
+              destination:     ${record.destination}
+              expiration time: ${record.expirationTime}
+              creation date:   ${new Date(record.creationDate)}
+              expiration date: ${new Date(record.expirationDate)}
+            `).trim());
+        }
+    }
+
+    private async linkDelete(parser: Parser) {
+        const id = parser.getWord();
+        parser.expectEnd();
+        const success = await Registry.instance.deleteLink(id);
+        if (success) {
+            ServerConsole.instance.log(`Deleted link '${id}'`);
+        } else {
+            ServerConsole.instance.error(`Failed to delete link '${id}'`);
+        }
+    }
+
+    private async stop(parser: Parser) {
+        parser.expectEnd();
+        await tempLinkSrv.close();
     }
 
 }

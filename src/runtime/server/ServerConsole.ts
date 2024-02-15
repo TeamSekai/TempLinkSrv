@@ -49,7 +49,6 @@ export class ServerConsole {
     }
 
     public async close() {
-        await Promise.all([Registry.instance.close(), tempLinkSrv.close()]);
         await this.log('Server closed!');
     }
 
@@ -59,9 +58,12 @@ export class ServerConsole {
             const text = this.decoder.decode(chunk);
             for (const c of text) {
                 await this.acceptCharacter(c);
+                if (tempLinkSrv.isClosed) {
+                    return;
+                }
             }
         }
-        await this.close();
+        await tempLinkSrv.close();
     }
 
     private async acceptCharacter(c: string) {

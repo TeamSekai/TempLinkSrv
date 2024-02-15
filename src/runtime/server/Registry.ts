@@ -44,6 +44,15 @@ export class Registry {
         return null;
     }
 
+    public getLinkById(id: string) {
+        return this.storage.selectLinkById(id);
+    }
+
+    public async deleteLink(id: string) {
+        const success = await this.collector?.timeout(id);
+        return success ?? false;
+    }
+
     public async close() {
         await Promise.all([this.storage.close(), this.collector?.end()]);
     }

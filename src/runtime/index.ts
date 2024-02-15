@@ -4,6 +4,7 @@ import { fromFileUrl } from 'https://deno.land/std@0.215.0/path/mod.ts';
 
 import { CONFIG } from '../setup/index.ts';
 import { ServerConsole } from './server/ServerConsole.ts';
+import { Registry } from './server/Registry.ts';
 
 export class TempLinkSrv {
     public static readonly instance = new TempLinkSrv();
@@ -14,6 +15,8 @@ export class TempLinkSrv {
 
     private readonly rootHtmlPath = fromFileUrl(new URL('../resources/html/index.html', import.meta.url));
 
+    private closed = false;
+
     private constructor() {
         ServerConsole.instance.enable();
         this.app.get('/', (_req, res) => {
@@ -23,15 +26,24 @@ export class TempLinkSrv {
     }
 
     public close() {
-        return new Promise<void>((resolve, reject) => {
-            this.server.close((err: unknown) => {
-                if (err == null) {
-                    resolve();
-                } else {
-                    reject(err);
-                }
-            });
-        });
+        return Promise.all([
+            Registry.instance.close(),
+            ServerConsole.instance.close(),
+            new Promise<void>((resolve, reject) => {
+                this.server.close((err: unknown) => {
+                    if (err == null) {
+                        this.closed = true;
+                        resolve();
+                    } else {
+                        reject(err);
+                    }
+                });
+            })
+        ]);
+    }
+
+    public get isClosed() {
+        return this.closed;
     }
 }
 

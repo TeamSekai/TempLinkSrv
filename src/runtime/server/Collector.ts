@@ -67,15 +67,16 @@ export class Collector {
         this.updateTimeouts();
     }
 
-    private async timeout(id: string) {
+    public async timeout(id: string) {
+        this.timeouts.delete(id);
         const success = await this.storage.deleteLink(id);
         if (!success) {
-            await ServerConsole.instance.error(`Failed to delete link '${id}'`);
-            return;
+            return false;
         }
         await ServerConsole.instance.log(`Link '${id}' has expired`);
         this.cache.delete(id);
         this.timeouts.delete(id);
+        return true;
     }
 
 }
