@@ -2,6 +2,7 @@ import { ServerConsole } from './ServerConsole.ts';
 import { Registry } from './Registry.ts';
 import { dedent } from '../util/strings.ts';
 import { tempLinkSrv } from './TempLinkSrv.ts';
+import { parseTime } from '../util/time.ts';
 
 function isWhitespace(c: string) {
     return /\s+/.test(c);
@@ -100,7 +101,7 @@ export class CommandExecutor {
     }
 
     private async linkCreate(parser: Parser) {
-        const expirationTime = Number.parseInt(parser.getWord());
+        const expirationTime = parseTime(parser.getWord());
         const destination = new URL(parser.getRest());
         const id = await Registry.instance.createLink(destination, expirationTime);
         if (id == null) {
