@@ -18,10 +18,12 @@ export class Registry {
 
     private collector: Collector | null = null;
 
+    private collectorPromise: Promise<Collector>;
+
     private constructor() {
         const storage = new SQLiteStorage();
         this.storage = storage;
-        Collector.forStorage(storage).then((collector) => this.collector = collector);
+        this.collectorPromise = Collector.forStorage(storage).then((collector) => this.collector = collector);
     }
 
     /**
@@ -54,6 +56,9 @@ export class Registry {
     }
 
     public async close() {
-        await Promise.all([this.storage.close(), this.collector?.end()]);
+        await Promise.all([
+            this.storage.close(),
+            this.collectorPromise.then((collector) => collector.end()),
+        ]);
     }
 }
