@@ -1,7 +1,7 @@
 import { parse } from 'npm:yaml@2.3.4';
 
-const DEFAULT_CONFIG_FILENAME = "../resources/config.yml";
-const CONFIG_FILENAME = "../../config.yml";
+const DEFAULT_CONFIG_FILENAME = '../resources/config.yml';
+const CONFIG_FILENAME = '../../config.yml';
 const DEFAULT_CONFIG_PATH = new URL(DEFAULT_CONFIG_FILENAME, import.meta.url);
 const CONFIG_PATH = new URL(CONFIG_FILENAME, import.meta.url);
 
@@ -9,6 +9,9 @@ const CONFIG_PATH = new URL(CONFIG_FILENAME, import.meta.url);
 export interface Config {
     readonly linkHostname: string;
     readonly linkPort: number;
+    readonly linkIdCharacters: string;
+    readonly linkIdLength: number;
+    readonly linkIdTrials: number;
 }
 
 async function getConfigContent() {
@@ -26,7 +29,7 @@ async function getConfig() {
         (async () => {
             const content = await getConfigContent();
             return content != null ? parse(content) : {};
-        })()
+        })(),
     ]);
     return Object.freeze(Object.assign(result, config)) as Config;
 }

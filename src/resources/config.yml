@@ -3,3 +3,12 @@ linkPort: 16528
 
 # リンクの作成を行うホスト名
 linkHostname: 0.0.0.0
+
+# リンク ID に用いる文字
+linkIdCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+
+# リンク ID の長さ
+linkIdLength: 5
+
+# リンク ID を生成する試行回数の上限
+linkIdTrials: 10
