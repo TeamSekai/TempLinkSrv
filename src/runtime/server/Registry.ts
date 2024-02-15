@@ -37,7 +37,7 @@ export class Registry {
         const maxTrials = CONFIG.linkIdTrials;
         for (let i = 0; i < maxTrials; i++) {
             const id = randomCharacterSequence(CONFIG.linkIdCharacters, CONFIG.linkIdLength);
-            const success = await this.storage.insertLink(id, record);
+            const success = id != 'api' && await this.storage.insertLink(id, record);
             if (success) {
                 this.collector?.addLink(id, record);
                 return id;
