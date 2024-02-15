@@ -49,7 +49,7 @@ export class SQLiteStorage implements DataStorage {
         return synchronizedPromise(() => {
             const result = this.database.query<[string, string, number, number]>(
                 'SELECT id, destination, expiration_time, creation_date FROM links WHERE creation_date + expiration_time <= ?',
-                [expirationDate]
+                [expirationDate],
             );
             const map = new Map<string, LinkRecord>();
             for (const [id, destination, expirationTime, creationDate] of result) {

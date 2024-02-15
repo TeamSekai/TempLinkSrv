@@ -118,14 +118,16 @@ export class CommandExecutor {
         if (record == null) {
             await ServerConsole.instance.error(`No link found by id '${id}'`);
         } else {
-            await ServerConsole.instance.log(dedent(`
+            await ServerConsole.instance.log(
+                dedent(`
             [Link Info]
               id:              ${id}
               destination:     ${record.destination}
               expiration time: ${record.expirationTime}
               creation date:   ${new Date(record.creationDate)}
               expiration date: ${new Date(record.expirationDate)}
-            `).trim());
+            `).trim(),
+            );
         }
     }
 
@@ -144,5 +146,4 @@ export class CommandExecutor {
         parser.expectEnd();
         await tempLinkSrv.close();
     }
-
 }

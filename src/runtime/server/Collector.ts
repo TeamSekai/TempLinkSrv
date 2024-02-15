@@ -3,10 +3,10 @@ import { LinkRecord } from '../database/LinkRecord.ts';
 import { ServerConsole } from './ServerConsole.ts';
 
 /** 有効期限までの時間がこれ以下であるリンクはキャッシュされる */
-const CACHED_EXPIRATION_TIME = 1000 * 60 * 60;  // 60 分間
+const CACHED_EXPIRATION_TIME = 1000 * 60 * 60; // 60 分間
 
 /** キャッシュを更新する頻度 */
-const CACHE_INTERVAL = 1000 * 60 * 30;  // 30 分間
+const CACHE_INTERVAL = 1000 * 60 * 30; // 30 分間
 
 /**
  * 指定の時刻にリンクを削除するクラス。
@@ -63,7 +63,7 @@ export class Collector {
     }
 
     private async updateCache() {
-        this.cache = await Collector.createCache(this.storage)
+        this.cache = await Collector.createCache(this.storage);
         this.updateTimeouts();
     }
 
@@ -78,5 +78,4 @@ export class Collector {
         this.timeouts.delete(id);
         return true;
     }
-
 }

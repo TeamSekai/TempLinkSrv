@@ -35,5 +35,4 @@ export class LinkRecord {
     public get expirationDate() {
         return this.creationDate + this.expirationTime;
     }
-
 }

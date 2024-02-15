@@ -21,7 +21,7 @@ export class Registry {
     private constructor() {
         const storage = new SQLiteStorage();
         this.storage = storage;
-        Collector.forStorage(storage).then(collector => this.collector = collector);
+        Collector.forStorage(storage).then((collector) => this.collector = collector);
     }
 
     /**

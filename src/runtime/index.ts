@@ -31,7 +31,7 @@ export class TempLinkSrv {
                 return res.status(404).sendFile(this.notFoundHtmlPath);
             }
             return res.redirect(301, linkRecord.destination.toString());
-        })
+        });
         this.server = this.app.listen(CONFIG.linkPort, CONFIG.linkHostname);
     }
 
@@ -48,7 +48,7 @@ export class TempLinkSrv {
                         reject(err);
                     }
                 });
-            })
+            }),
         ]);
     }
 
