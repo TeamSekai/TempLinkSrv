@@ -12,3 +12,9 @@ linkIdLength: 5
 
 # リンク ID を生成する試行回数の上限
 linkIdTrials: 10
+
+# 有効期限までの時間がこれ以下であるリンクはメモリにキャッシュされる
+linkCachedExpirationTime: 3600000
+
+# キャッシュを更新する頻度
+linkCacheInterval: 1800000

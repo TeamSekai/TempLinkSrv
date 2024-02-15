@@ -12,6 +12,8 @@ export interface Config {
     readonly linkIdCharacters: string;
     readonly linkIdLength: number;
     readonly linkIdTrials: number;
+    readonly linkExpirationPrepareTime: number;
+    readonly linkExpirationPrepareInterval: number;
 }
 
 async function getConfigContent() {

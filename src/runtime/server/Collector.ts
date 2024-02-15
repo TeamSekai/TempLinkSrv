@@ -1,12 +1,11 @@
+import { CONFIG } from '../../setup/index.ts';
 import { DataStorage } from '../database/DataStorage.ts';
 import { LinkRecord } from '../database/LinkRecord.ts';
 import { ServerConsole } from './ServerConsole.ts';
 
-/** 有効期限までの時間がこれ以下であるリンクはキャッシュされる */
-const CACHED_EXPIRATION_TIME = 1000 * 60 * 60; // 60 分間
+const CACHED_EXPIRATION_TIME = CONFIG.linkExpirationPrepareTime;
 
-/** キャッシュを更新する頻度 */
-const CACHE_INTERVAL = 1000 * 60 * 30; // 30 分間
+const CACHE_INTERVAL = CONFIG.linkExpirationPrepareInterval > CACHED_EXPIRATION_TIME ? CACHED_EXPIRATION_TIME : CONFIG.linkExpirationPrepareInterval;
 
 /**
  * 指定の時刻にリンクを削除するクラス。
