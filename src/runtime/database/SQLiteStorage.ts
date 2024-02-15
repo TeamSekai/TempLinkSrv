@@ -26,9 +26,9 @@ export class SQLiteStorage implements DataStorage {
             record.creationDate,
         ]);
         return Promise.resolve(true);
-    };
+    }
 
-    selectLinkById (id: string) {
+    selectLinkById(id: string) {
         const result = this.database.query<[string, number, number]>(
             'SELECT destination, expiration_time, creation_date FROM links WHERE id = ?;',
             [id],
@@ -38,7 +38,7 @@ export class SQLiteStorage implements DataStorage {
         }
         const [destination, expirationTime, creationDate] = result[0];
         return Promise.resolve(new LinkRecord(new URL(destination), expirationTime, creationDate));
-    };
+    }
 
     selectLinksByExpirationDate(expirationDate: number) {
         const result = this.database.query<[string, string, number, number]>(
@@ -50,7 +50,7 @@ export class SQLiteStorage implements DataStorage {
             map.set(id, new LinkRecord(new URL(destination), expirationTime, creationDate));
         }
         return Promise.resolve(map);
-    };
+    }
 
     deleteLink(id: string) {
         if (this.database.query('SELECT id FROM links WHERE id = ?;', [id]).length == 0) {
@@ -58,10 +58,10 @@ export class SQLiteStorage implements DataStorage {
         }
         this.database.query('DELETE FROM links WHERE id = ?;', [id]);
         return Promise.resolve(true);
-    };
+    }
 
     close() {
         this.database.close();
         return Promise.resolve();
-    };
+    }
 }
