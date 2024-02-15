@@ -2,9 +2,9 @@
 import express from 'npm:express@4.18.2';
 import { fromFileUrl } from 'https://deno.land/std@0.215.0/path/mod.ts';
 
-import { CONFIG } from '../setup/index.ts';
-import { ServerConsole } from './server/ServerConsole.ts';
-import { Registry } from './server/Registry.ts';
+import { CONFIG } from '../../setup/index.ts';
+import { ServerConsole } from './ServerConsole.ts';
+import { Registry } from './Registry.ts';
 
 export class TempLinkSrv {
     public static readonly instance = new TempLinkSrv();

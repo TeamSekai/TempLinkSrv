@@ -1,5 +1,5 @@
 import { Registry } from './Registry.ts';
-import { tempLinkSrv } from '../index.ts';
+import { tempLinkSrv } from './TempLinkSrv.ts';
 import { CommandExecutor } from './CommandExecutor.ts';
 
 const rawConsoleLog = console.log;

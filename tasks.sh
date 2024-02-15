@@ -3,7 +3,7 @@
 cd $(dirname $0)
 
 ACTION_NAME="TempLinkSrv"
-MAIN_FILENAME="src/runtime/index.ts"
+MAIN_FILENAME="src/runtime/server/TempLinkSrv.ts"
 SETUP_FILENAME="src/setup/index.ts"
 LOG_PREFIX="\e[36m[TempLinkSrv]\e[0m"
 
