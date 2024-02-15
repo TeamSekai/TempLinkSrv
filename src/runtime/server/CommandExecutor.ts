@@ -67,8 +67,17 @@ export class CommandExecutor {
     async execute(command: string) {
         const parser = new Parser(command);
         const commandName = parser.getWord();
-        if (commandName == 'link-create') {
-            await this.linkCreate(parser);
+        try {
+            switch (commandName) {
+                case 'link-create':
+                    await this.linkCreate(parser);
+                    break;
+                default:
+                    await ServerConsole.instance.error(`Unknown command: ${commandName}`);
+                    break;
+            }
+        } catch (e) {
+            await ServerConsole.instance.error(`An error occurred while executing the command: ${e}`);
         }
     }
 
@@ -82,4 +91,5 @@ export class CommandExecutor {
             await ServerConsole.instance.log(`Created a link as '${id}'`);
         }
     }
+
 }
