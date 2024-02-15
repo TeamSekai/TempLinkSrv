@@ -1,7 +1,7 @@
 import { LinkRecord } from './LinkRecord.ts';
 
 /**
- * データの格納先を表現する基底クラス。
+ * データの格納先を表現するインターフェイス。
  */
 export interface DataStorage {
     /**
@@ -18,7 +18,15 @@ export interface DataStorage {
      * @param id リンク ID
      * @returns リンクに関する情報
      */
-    selectLink(id: string): Promise<LinkRecord | null>;
+    selectLinkById(id: string): Promise<LinkRecord | null>;
+
+    /**
+     * 指定された有効期限が指定された値以下であるリンクの Map を返す。
+     * 返される Map は変更可能だが、この Map の変更はデータの格納先に影響しない。
+     * @param expirationDate 有効期限の上限
+     * @return リンク ID とリンクの情報からなる Map
+     */
+    selectLinksByExpirationDate(expirationDate: number): Promise<Map<string, LinkRecord>>;
 
     /**
      * リンクに関する情報を削除する。

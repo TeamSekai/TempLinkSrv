@@ -28,4 +28,12 @@ export class LinkRecord {
         this.expirationTime = expirationTime;
         this.creationDate = creationDate;
     }
+
+    /**
+     * リンクの有効期限 (UNIX タイム)
+     */
+    public get expirationDate() {
+        return this.creationDate + this.expirationTime;
+    }
+
 }

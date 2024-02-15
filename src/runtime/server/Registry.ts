@@ -3,6 +3,7 @@ import { randomCharacterSequence } from '../util/random.ts';
 import { LinkRecord } from '../database/LinkRecord.ts';
 import { DataStorage } from '../database/DataStorage.ts';
 import { SQLiteStorage } from '../database/SQLiteStorage.ts';
+import { Collector } from './Collector.ts';
 
 /**
  * リンクの作成用クラス
@@ -13,9 +14,15 @@ export class Registry {
      */
     public static readonly instance: Registry = new Registry();
 
-    private readonly storage: DataStorage = new SQLiteStorage();
+    private readonly storage: DataStorage;
 
-    private constructor() {}
+    private collector: Collector | null = null;
+
+    private constructor() {
+        const storage = new SQLiteStorage();
+        this.storage = storage;
+        Collector.forStorage(storage).then(collector => this.collector = collector);
+    }
 
     /**
      * 短縮リンクを作成する。作成に失敗した場合は null を返す。
@@ -30,6 +37,7 @@ export class Registry {
             const id = randomCharacterSequence(CONFIG.linkIdCharacters, CONFIG.linkIdLength);
             const success = await this.storage.insertLink(id, record);
             if (success) {
+                this.collector?.addLink(id, record);
                 return id;
             }
         }
@@ -37,6 +45,6 @@ export class Registry {
     }
 
     public async close() {
-        await this.storage.close();
+        await Promise.all([this.storage.close(), this.collector?.end()]);
     }
 }
