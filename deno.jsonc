@@ -1,4 +1,8 @@
 {
+    "tasks": {
+        "start": "/bin/bash tasks.sh start",
+        "pm2": "/bin/bash tasks.sh pm2"
+    },
     "fmt": {
         "indentWidth": 4,
         "lineWidth": 120,
