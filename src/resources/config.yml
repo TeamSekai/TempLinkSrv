@@ -5,6 +5,7 @@ linkPort: 16528
 linkHostname: 0.0.0.0
 
 # リンク ID に用いる文字
+# 使える文字は半角の英数字と、'-' (マイナスハイフン), '.' (ピリオド), '_' (アンダーバー), '~' (チルダ)
 linkIdCharacters: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
 # リンク ID の長さ
@@ -14,7 +15,7 @@ linkIdLength: 5
 linkIdTrials: 10
 
 # 有効期限までの時間がこれ以下であるリンクはメモリにキャッシュされる
-linkCachedExpirationTime: 3600000
+linkExpirationPrepareTime: 3600000
 
 # キャッシュを更新する頻度
-linkCacheInterval: 1800000
+linkExpirationPrepareInterval: 1800000
