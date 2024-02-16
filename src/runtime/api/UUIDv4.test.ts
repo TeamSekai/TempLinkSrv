@@ -3,6 +3,8 @@ import { assertSpyCalls, stub } from 'https://deno.land/std@0.215.0/testing/mock
 
 import { UUIDv4 } from './UUIDv4.ts';
 import { uint8ArrayOf } from '../util/arrays.ts';
+import { assertThrows } from 'https://deno.land/std@0.215.0/assert/assert_throws.ts';
+import { TokenError } from './errors.ts';
 
 const UUID_STRING = 'd0ceede6-6fd0-44dd-94ce-5486fcec615a';
 const UUID_BYTES = uint8ArrayOf<16>([
@@ -24,16 +26,25 @@ const UUID_BYTES = uint8ArrayOf<16>([
     0x5a,
 ]);
 
-Deno.test('UUIDv4 conversion', () => {
+Deno.test('UUIDv4', async (classTest) => {
     const stubUUIDv4_random = stub(UUIDv4, 'random', () => new UUIDv4(UUID_STRING));
-    try {
+
+    await classTest.step('constructor', () => {
+        assertThrows(() => new UUIDv4('Not a v4 UUID'), TokenError);
+    });
+
+    await classTest.step('random', () => {
         const uuid = UUIDv4.random();
         assertEquals(uuid.toString(), UUID_STRING);
         const fromBytes = UUIDv4.fromUint8Array(UUID_BYTES);
         assertEquals(uuid, fromBytes);
         assertEquals(fromBytes.toUint8Array(), UUID_BYTES);
-        assertSpyCalls(stubUUIDv4_random, 1);
-    } finally {
-        stubUUIDv4_random.restore();
-    }
+    });
+
+    await classTest.step('fromUint8Array', () => {
+        assertThrows(() => UUIDv4.fromUint8Array(uint8ArrayOf([0x12, 0x34])), RangeError);
+    });
+
+    assertSpyCalls(stubUUIDv4_random, 1);
+    stubUUIDv4_random.restore();
 });

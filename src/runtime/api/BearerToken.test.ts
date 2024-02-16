@@ -4,6 +4,8 @@ import { uint8ArrayOf } from '../util/arrays.ts';
 import { UUIDv4 } from './UUIDv4.ts';
 import { BearerToken, PassCode } from './BearerToken.ts';
 import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
+import { assertThrows } from 'https://deno.land/std@0.215.0/assert/assert_throws.ts';
+import { TokenError } from './errors.ts';
 
 const UUID_STRING = '39862482-dac0-4a0f-82b0-41d00fb72cb0';
 
@@ -38,15 +40,44 @@ const PASS_CODE_BYTES = uint8ArrayOf<26>([
 
 const TOKEN = 'Tl0_OYYkgtrASg+CsEHQD7cssAJXqyVskDdn/ts3dP3Nd2HIVV2u5v2r/HS8';
 
-Deno.test('BearerToken.generate', () => {
+Deno.test('BearerToken.ts', async (fileTest) => {
     const stubUUIDv4_random = stub(UUIDv4, 'random', () => new UUIDv4(UUID_STRING));
     const stubPassCode_random = stub(PassCode, 'random', () => PassCode.forBytes(PASS_CODE_BYTES));
-    try {
-        const token = BearerToken.generate();
-        assertEquals(token.toString(), TOKEN);
-        assertEquals(BearerToken.forString(TOKEN), token);
-    } finally {
-        stubUUIDv4_random.restore();
-        stubPassCode_random.restore();
-    }
+
+    await fileTest.step('PassCode', async (classTest) => {
+        await classTest.step('forBytes', () => {
+            assertThrows(() => PassCode.forBytes([0x12, 0x34]), RangeError);
+        });
+
+        await classTest.step('random', () => {
+            assertEquals(PassCode.random().bytes, PASS_CODE_BYTES);
+        });
+    });
+
+    await fileTest.step('BearerToken', async (classTest) => {
+        await classTest.step('forString', () => {
+            assertThrows(
+                () => BearerToken.forString('Tl0_........................................................'),
+                TokenError,
+                'regular expression',
+            );
+            assertThrows(
+                () => BearerToken.forString('Tl1_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'),
+                TokenError,
+                'version',
+            );
+        });
+
+        await classTest.step('generate', () => {
+            const token = BearerToken.generate();
+            assertEquals(token.toString(), TOKEN);
+            assertEquals(BearerToken.forString(TOKEN), token);
+            assertEquals(token.version, '0');
+            assertEquals(token.user, new UUIDv4(UUID_STRING));
+            assertEquals(token.passCode, PassCode.forBytes(PASS_CODE_BYTES));
+        });
+    });
+
+    stubUUIDv4_random.restore();
+    stubPassCode_random.restore();
 });
