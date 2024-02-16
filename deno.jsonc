@@ -2,7 +2,7 @@
     "tasks": {
         "start": "/bin/bash tasks.sh start",
         "pm2": "/bin/bash tasks.sh pm2",
-        "cov": "deno test --coverage=cov_profile && deno coverage cov_profile --html"
+        "cov": "rm -rf ./cov_profile/ && deno test --coverage=cov_profile && deno coverage cov_profile --html"
     },
     "fmt": {
         "indentWidth": 4,

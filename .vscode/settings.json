@@ -1,4 +1,5 @@
 {
     "deno.enable": true,
-    "deno.config": "./deno.jsonc"
+    "deno.config": "./deno.jsonc",
+    "liveServer.settings.root": "./cov_profile/html/"
 }
