@@ -14,6 +14,7 @@ export interface Config {
     readonly linkIdTrials: number;
     readonly linkExpirationPrepareTime: number;
     readonly linkExpirationPrepareInterval: number;
+    readonly databaseType: 'sqlite' | 'volatile';
 }
 
 async function getConfigContent() {

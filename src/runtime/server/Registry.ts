@@ -3,10 +3,20 @@ import { randomCharacterSequence } from '../util/random.ts';
 import { LinkRecord } from '../database/LinkRecord.ts';
 import { DataStorage } from '../database/DataStorage.ts';
 import { SQLiteStorage } from '../database/SQLiteStorage.ts';
+import { VolatileStorage } from '../database/VolatileStorage.ts';
 import { Collector } from './Collector.ts';
 import { filterCharacters } from '../util/strings.ts';
 
 const LINK_ID_CHARACTERS = filterCharacters(CONFIG.linkIdCharacters, /[A-Z0-9\-._~]/);
+
+function getStorage(): DataStorage {
+    switch (CONFIG.databaseType) {
+        case 'sqlite':
+            return new SQLiteStorage();
+        case 'volatile':
+            return new VolatileStorage();
+    }
+}
 
 /**
  * リンクの作成用クラス
@@ -24,7 +34,7 @@ export class Registry {
     private collectorPromise: Promise<Collector>;
 
     private constructor() {
-        const storage = new SQLiteStorage();
+        const storage = getStorage();
         this.storage = storage;
         this.collectorPromise = Collector.forStorage(storage).then((collector) => this.collector = collector);
     }

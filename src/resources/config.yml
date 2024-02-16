@@ -19,3 +19,7 @@ linkExpirationPrepareTime: 3600000
 
 # キャッシュを更新する頻度
 linkExpirationPrepareInterval: 1800000
+
+# sqlite もしくは volatile
+# volatile を選択するとサーバー停止時にリンクがすべて削除されます。
+databaseType: sqlite
