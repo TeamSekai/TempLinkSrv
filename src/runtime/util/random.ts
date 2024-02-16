@@ -14,6 +14,9 @@ export function randomInteger(min: number, max: number) {
  * @param length 文字列の長さ
  */
 export function randomCharacterSequence(characters: string, length: number) {
+    if (characters.length == 0) {
+        throw new RangeError('characters must not be an empty string');
+    }
     const characterCount = characters.length;
     let result = '';
     for (let i = 0; i < length; i++) {

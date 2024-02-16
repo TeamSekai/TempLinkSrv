@@ -24,3 +24,18 @@ export function dedent(s: string, indentChar = ' ') {
         .reduce((a, b) => a < b ? a : b);
     return lines.map((line) => line.substring(minDepth)).join('\n');
 }
+
+/**
+ * 文字列の中で正規表現に一致する文字だけを取り出した文字列を返す。
+ * @param s 文字列
+ * @param regexp 文字を検査する正規表現
+ */
+export function filterCharacters(s: string, regexp: RegExp): string {
+    let result = '';
+    for (const c of s) {
+        if (regexp.test(c)) {
+            result += c;
+        }
+    }
+    return result;
+}

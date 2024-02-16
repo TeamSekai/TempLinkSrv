@@ -4,6 +4,9 @@ import { LinkRecord } from '../database/LinkRecord.ts';
 import { DataStorage } from '../database/DataStorage.ts';
 import { SQLiteStorage } from '../database/SQLiteStorage.ts';
 import { Collector } from './Collector.ts';
+import { filterCharacters } from '../util/strings.ts';
+
+const LINK_ID_CHARACTERS = filterCharacters(CONFIG.linkIdCharacters, /[A-Z0-9\-._~]/);
 
 /**
  * リンクの作成用クラス
@@ -33,6 +36,9 @@ export class Registry {
      * @returns 新たに作成されたリンク ID
      */
     public async createLink(destination: URL, expirationTime: number) {
+        if (CONFIG.linkIdCharacters == '') {
+            throw new RangeError('linkIdCharacters must not be an empty string');
+        }
         const record = new LinkRecord(destination, expirationTime, Date.now());
         const maxTrials = CONFIG.linkIdTrials;
         for (let i = 0; i < maxTrials; i++) {
