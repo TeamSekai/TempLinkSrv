@@ -5,7 +5,9 @@ import { ServerConsole } from './ServerConsole.ts';
 
 const CACHED_EXPIRATION_TIME = CONFIG.linkExpirationPrepareTime;
 
-const CACHE_INTERVAL = CONFIG.linkExpirationPrepareInterval > CACHED_EXPIRATION_TIME ? CACHED_EXPIRATION_TIME : CONFIG.linkExpirationPrepareInterval;
+const CACHE_INTERVAL = CONFIG.linkExpirationPrepareInterval > CACHED_EXPIRATION_TIME
+    ? CACHED_EXPIRATION_TIME
+    : CONFIG.linkExpirationPrepareInterval;
 
 /**
  * 指定の時刻にリンクを削除するクラス。

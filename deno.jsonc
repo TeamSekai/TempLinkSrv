@@ -1,13 +1,15 @@
 {
     "tasks": {
         "start": "/bin/bash tasks.sh start",
-        "pm2": "/bin/bash tasks.sh pm2"
+        "pm2": "/bin/bash tasks.sh pm2",
+        "cov": "deno test --coverage=cov_profile && deno coverage cov_profile --html"
     },
     "fmt": {
         "indentWidth": 4,
         "lineWidth": 120,
         "semiColons": true,
         "singleQuote": true,
-        "useTabs": false
+        "useTabs": false,
+        "exclude": ["./cov_profile/"]
     }
 }

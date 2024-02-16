@@ -1,3 +1,6 @@
+import { uint8ArrayOf } from './arrays.ts';
+import { Uint8ArrayOf } from './arrays.ts';
+
 /**
  * 指定した区間内のランダムな整数を返す。
  * @param min 最小値
@@ -22,5 +25,11 @@ export function randomCharacterSequence(characters: string, length: number) {
     for (let i = 0; i < length; i++) {
         result += characters.charAt(randomInteger(0, characterCount));
     }
+    return result;
+}
+
+export function randomUint8Array<N extends number = number>(length: N): Uint8ArrayOf<N> {
+    const result = uint8ArrayOf(length);
+    crypto.getRandomValues(result);
     return result;
 }
