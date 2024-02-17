@@ -8,6 +8,7 @@ import { SQLiteStorage } from '../database/SQLiteStorage.ts';
 import { VolatileStorage } from '../database/VolatileStorage.ts';
 import { Collector } from './Collector.ts';
 import { filterCharacters } from '../util/strings.ts';
+import { Authentication } from '../authentication/Authentication.ts';
 
 const LINK_ID_CHARACTERS = filterCharacters(CONFIG.linkIdCharacters, /[A-Z0-9\-._~]/);
 
@@ -29,6 +30,8 @@ export class Registry {
      */
     public static readonly instance: Registry = new Registry();
 
+    public readonly authentication: Authentication;
+
     private readonly storage: DataStorage;
 
     private collector: Collector | null = null;
@@ -39,6 +42,7 @@ export class Registry {
         const storage = getStorage();
         this.storage = storage;
         this.collectorPromise = Collector.forStorage(storage).then((collector) => this.collector = collector);
+        this.authentication = new Authentication(storage);
     }
 
     /**

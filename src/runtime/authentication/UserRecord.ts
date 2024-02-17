@@ -1,5 +1,5 @@
 import { PassCode } from './PassCode.ts';
-import { ReadonlyUint8Array, Uint8ArrayOf, isArrayEqual } from '../util/arrays.ts';
+import { isArrayEqual, ReadonlyUint8Array, Uint8ArrayOf } from '../util/arrays.ts';
 
 function requireReadonlyUint8Array<N extends number>(buffer: Uint8Array, length: N, name: string) {
     if (buffer.length != length) {

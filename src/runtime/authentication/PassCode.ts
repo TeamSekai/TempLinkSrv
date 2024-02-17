@@ -10,7 +10,7 @@ export class PassCode {
 
     public async hash(salt: Uint8Array | ReadonlyUint8Array<32>) {
         if (salt.length != 32) {
-            throw new RangeError(`The length of salt must be 32, but is ${salt.length}`)
+            throw new RangeError(`The length of salt must be 32, but is ${salt.length}`);
         }
         const buffer = new Uint8Array(26 + 32);
         buffer.set(this.bytes);
