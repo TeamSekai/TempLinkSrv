@@ -27,17 +27,20 @@ export function bufferToHexString(buffer: ArrayLike<number>, start = 0, end: num
     return result;
 }
 
-export function hexStringToBuffer(s: string, buffer: Uint8Array, start: number) {
+export function hexStringToBuffer(s: string, buffer: Uint8Array | null = null, start = 0) {
     if (!/^([0-9A-Fa-z][0-9A-Fa-z])*$/.test(s)) {
         throw new IllegalArgumentError(`Not a valid hex string: '${s}'`);
     }
     const length = s.length / 2;
-    if (buffer.length < start + length) {
+    if (buffer == null) {
+        buffer = new Uint8Array(start + length);
+    } else if (buffer.length < start + length) {
         throw new RangeError('buffer does not have an enough length');
     }
     for (let i = 0; i < length; i++) {
         buffer[start + i] = Number.parseInt(s.substring(i * 2, (i + 1) * 2), 16);
     }
+    return buffer;
 }
 
 export function uint8ArrayOf<N extends number>(length: N): Uint8ArrayOf<N>;
@@ -49,4 +52,17 @@ export function uint8ArrayOf<N extends number>(arrayOrLength: ArrayOf<number, N>
         return new Uint8Array(arrayOrLength) as Uint8ArrayOf<N>;
     }
     return new Uint8Array(arrayOrLength) as Uint8ArrayOf<N>;
+}
+
+export function isArrayEqual<T>(a1: ArrayLike<T>, a2: ArrayLike<T>) {
+    const length = a1.length;
+    if (length != a2.length) {
+        return false;
+    }
+    for (let i = 0; i < length; i++) {
+        if (a1[i] != a2[i]) {
+            return false;
+        }
+    }
+    return true;
 }

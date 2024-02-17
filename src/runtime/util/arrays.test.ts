@@ -1,7 +1,7 @@
 import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
 import { assertThrows } from 'https://deno.land/std@0.215.0/assert/assert_throws.ts';
 
-import { bufferToHexString, hexStringToBuffer } from '../util/arrays.ts';
+import { bufferToHexString, hexStringToBuffer, isArrayEqual } from '../util/arrays.ts';
 
 Deno.test('bufferToHexString', () => {
     const buffer = new Uint8Array([0x12, 0x34, 0x56, 0x78]);
@@ -35,4 +35,14 @@ Deno.test('hexStringToBuffer', () => {
 
     const buffer5 = new Uint8Array(4);
     assertThrows(() => hexStringToBuffer('12345', buffer5, 0));
+});
+
+Deno.test('isArrayEqual', () => {
+    assertEquals(isArrayEqual([0], []), false);
+    assertEquals(isArrayEqual([], [0]), false);
+    assertEquals(isArrayEqual([0, 1], [0, 1, 2]), false);
+    assertEquals(isArrayEqual([0, 1, 2], [0, 1]), false);
+    assertEquals(isArrayEqual([0, 1, 2], [0, 1, 2]), true);
+    assertEquals(isArrayEqual([], []), true);
+    assertEquals(isArrayEqual([0, 1, 2, 3], [0, 1, -2, 3]), false);
 });
