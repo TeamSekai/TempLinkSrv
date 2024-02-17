@@ -1,18 +1,30 @@
 import { LinkRecord } from './LinkRecord.ts';
 import { DataStorage } from './DataStorage.ts';
 import { DB } from 'https://deno.land/x/sqlite@v3.8/mod.ts';
+import { UUIDv4 } from '../api/UUIDv4.ts';
+import { UserRecord } from './UserRecord.ts';
+import { ReadonlyUint8Array } from '../util/arrays.ts';
 
 export class SQLiteStorage implements DataStorage {
     private readonly database: DB;
 
     public constructor(path: string) {
         this.database = new DB(path);
-        this.database.execute(`CREATE TABLE IF NOT EXISTS links (
-            id              TEXT PRIMARY KEY,
-            destination     TEXT NOT NULL,
-            expiration_time INTEGER NOT NULL,
-            creation_date   INTEGER NOT NULL
-        );`);
+        this.database.execute(`
+            CREATE TABLE IF NOT EXISTS links (
+                id              TEXT PRIMARY KEY,
+                destination     TEXT NOT NULL,
+                expiration_time INTEGER NOT NULL,
+                creation_date   INTEGER NOT NULL
+            );
+        `);
+        this.database.execute(`
+            CREATE TABLE IF NOT EXISTS users (
+                user_id TEXT PRIMARY KEY,
+                salt    BLOB,
+                hash    BLOB
+            );
+        `);
     }
 
     linkCount() {
@@ -62,6 +74,43 @@ export class SQLiteStorage implements DataStorage {
             return Promise.resolve(false);
         }
         this.database.query('DELETE FROM links WHERE id = ?;', [id]);
+        return Promise.resolve(true);
+    }
+
+    userCount(): Promise<number> {
+        const result = this.database.query<[number]>('SELECT COUNT(user_id) FROM users;');
+        return Promise.resolve(result[0][0]);
+    }
+
+    insertUser(id: UUIDv4, record: UserRecord): Promise<boolean> {
+        if (this.database.query('SELECT user_id FROM users WHERE user_id = ?;', [id.toString()]).length != 0) {
+            return Promise.resolve(false);
+        }
+        this.database.query('INSERT INTO users VALUES (?, ?, ?);', [
+            id.toString(),
+            record.salt.slice(),
+            record.hash.slice(),
+        ]);
+        return Promise.resolve(true);
+    }
+
+    selectUser(id: UUIDv4): Promise<UserRecord | null> {
+        const result = this.database.query<[Uint8Array, Uint8Array]>(
+            'SELECT salt, hash FROM users WHERE user_id = ?;',
+            [id.toString()],
+        );
+        if (result.length == 0) {
+            return Promise.resolve(null);
+        }
+        const [salt, hash] = result[0];
+        return Promise.resolve(new UserRecord(salt, hash));
+    }
+
+    deleteUser(id: UUIDv4): Promise<boolean> {
+        if (this.database.query('SELECT user_id FROM users WHERE user_id = ?;', [id.toString()]).length == 0) {
+            return Promise.resolve(false);
+        }
+        this.database.query('DELETE FROM users WHERE user_id = ?;', [id.toString()]);
         return Promise.resolve(true);
     }
 

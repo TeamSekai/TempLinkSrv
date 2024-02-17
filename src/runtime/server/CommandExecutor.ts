@@ -104,7 +104,9 @@ export class CommandExecutor {
         const expirationTime = parseTime(parser.getWord());
         const destinationString = parser.getRest();
         if (!destinationString.startsWith('http://') && !destinationString.startsWith('https://')) {
-            throw new URIError(`The destination must start with 'http://' or 'https://'; destination: ${destinationString}`);
+            throw new URIError(
+                `The destination must start with 'http://' or 'https://'; destination: ${destinationString}`,
+            );
         }
         const destination = new URL(destinationString);
         const id = await Registry.instance.createLink(destination, expirationTime);

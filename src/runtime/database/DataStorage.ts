@@ -1,4 +1,6 @@
+import { UUIDv4 } from '../api/UUIDv4.ts';
 import { LinkRecord } from './LinkRecord.ts';
+import { UserRecord } from './UserRecord.ts';
 
 /**
  * データの格納先を表現するインターフェイス。
@@ -41,6 +43,14 @@ export interface DataStorage {
      * @returns 削除に成功した場合 true
      */
     deleteLink(id: string): Promise<boolean>;
+
+    userCount(): Promise<number>;
+
+    insertUser(id: UUIDv4, record: UserRecord): Promise<boolean>;
+
+    selectUser(id: UUIDv4): Promise<UserRecord | null>;
+
+    deleteUser(id: UUIDv4): Promise<boolean>;
 
     /**
      * 入出力を終了してデータの格納先を解放する。
