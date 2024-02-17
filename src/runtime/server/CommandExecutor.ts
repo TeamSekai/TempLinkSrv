@@ -102,7 +102,11 @@ export class CommandExecutor {
 
     private async linkCreate(parser: Parser) {
         const expirationTime = parseTime(parser.getWord());
-        const destination = new URL(parser.getRest());
+        const destinationString = parser.getRest();
+        if (!destinationString.startsWith('http://') && !destinationString.startsWith('https://')) {
+            throw new URIError(`The destination must start with 'http://' or 'https://'; destination: ${destinationString}`);
+        }
+        const destination = new URL(destinationString);
         const id = await Registry.instance.createLink(destination, expirationTime);
         if (id == null) {
             await ServerConsole.instance.log('Failed to create a link');
