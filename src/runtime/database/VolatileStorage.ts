@@ -1,4 +1,4 @@
-import { UUIDv4 } from '../api/UUIDv4.ts';
+import { UUIDv4 } from '../authentication/UUIDv4.ts';
 import { DataStorage } from './DataStorage.ts';
 import { LinkRecord } from './LinkRecord.ts';
 import { UserRecord } from './UserRecord.ts';

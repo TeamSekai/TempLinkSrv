@@ -1,10 +1,10 @@
 import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
 import { assertSpyCalls, stub } from 'https://deno.land/std@0.215.0/testing/mock.ts';
+import { assertThrows } from 'https://deno.land/std@0.215.0/assert/assert_throws.ts';
 
 import { UUIDv4 } from './UUIDv4.ts';
 import { uint8ArrayOf } from '../util/arrays.ts';
-import { assertThrows } from 'https://deno.land/std@0.215.0/assert/assert_throws.ts';
-import { TokenError } from './errors.ts';
+import { TokenError } from '../api/errors.ts';
 
 const UUID_STRING = 'd0ceede6-6fd0-44dd-94ce-5486fcec615a';
 const UUID_BYTES = uint8ArrayOf<16>([

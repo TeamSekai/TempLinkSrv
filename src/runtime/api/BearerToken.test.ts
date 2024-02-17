@@ -1,8 +1,9 @@
 import { stub } from 'https://deno.land/std@0.215.0/testing/mock.ts';
 
 import { uint8ArrayOf } from '../util/arrays.ts';
-import { UUIDv4 } from './UUIDv4.ts';
-import { BearerToken, PassCode } from './BearerToken.ts';
+import { UUIDv4 } from '../authentication/UUIDv4.ts';
+import { BearerToken } from './BearerToken.ts';
+import { PassCode } from '../authentication/PassCode.ts';
 import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
 import { assertThrows } from 'https://deno.land/std@0.215.0/assert/assert_throws.ts';
 import { TokenError } from './errors.ts';

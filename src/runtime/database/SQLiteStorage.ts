@@ -1,7 +1,8 @@
+import { DB } from 'https://deno.land/x/sqlite@v3.8/mod.ts';
+
 import { LinkRecord } from './LinkRecord.ts';
 import { DataStorage } from './DataStorage.ts';
-import { DB } from 'https://deno.land/x/sqlite@v3.8/mod.ts';
-import { UUIDv4 } from '../api/UUIDv4.ts';
+import { UUIDv4 } from '../authentication/UUIDv4.ts';
 import { UserRecord } from './UserRecord.ts';
 
 export class SQLiteStorage implements DataStorage {
