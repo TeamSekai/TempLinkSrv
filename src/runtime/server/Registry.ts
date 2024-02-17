@@ -54,7 +54,7 @@ export class Registry {
         const record = new LinkRecord(destination, expirationTime, Date.now());
         const maxTrials = CONFIG.linkIdTrials;
         for (let i = 0; i < maxTrials; i++) {
-            const id = randomCharacterSequence(CONFIG.linkIdCharacters, CONFIG.linkIdLength);
+            const id = randomCharacterSequence(LINK_ID_CHARACTERS, CONFIG.linkIdLength);
             const success = id != 'api' && await this.storage.insertLink(id, record);
             if (success) {
                 this.collector?.addLink(id, record);
