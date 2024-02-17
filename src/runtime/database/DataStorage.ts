@@ -1,6 +1,6 @@
 import { UUIDv4 } from '../authentication/UUIDv4.ts';
 import { LinkRecord } from './LinkRecord.ts';
-import { UserRecord } from './UserRecord.ts';
+import { UserRecord } from '../authentication/UserRecord.ts';
 
 /**
  * データの格納先を表現するインターフェイス。

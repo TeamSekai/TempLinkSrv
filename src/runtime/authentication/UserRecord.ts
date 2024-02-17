@@ -1,4 +1,4 @@
-import { PassCode } from '../authentication/PassCode.ts';
+import { PassCode } from './PassCode.ts';
 import { ReadonlyUint8Array, Uint8ArrayOf, isArrayEqual } from '../util/arrays.ts';
 
 function requireReadonlyUint8Array<N extends number>(buffer: Uint8Array, length: N, name: string) {

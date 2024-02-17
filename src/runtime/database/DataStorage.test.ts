@@ -6,7 +6,7 @@ import { LinkRecord } from './LinkRecord.ts';
 import { testEach } from '../../tests/tests.ts';
 import { DataStorage } from './DataStorage.ts';
 import { UUIDv4 } from '../authentication/UUIDv4.ts';
-import { UserRecord } from './UserRecord.ts';
+import { UserRecord } from '../authentication/UserRecord.ts';
 import { randomUint8Array } from '../util/random.ts';
 
 const DUMMY_USERS: readonly (readonly [UUIDv4, UserRecord])[] = new Array(3).fill(null).map(

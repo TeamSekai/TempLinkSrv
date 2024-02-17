@@ -1,7 +1,7 @@
 import { UUIDv4 } from '../authentication/UUIDv4.ts';
 import { DataStorage } from './DataStorage.ts';
 import { LinkRecord } from './LinkRecord.ts';
-import { UserRecord } from './UserRecord.ts';
+import { UserRecord } from '../authentication/UserRecord.ts';
 
 export class VolatileStorage implements DataStorage {
     private readonly linkTable = new Map<string, LinkRecord>();

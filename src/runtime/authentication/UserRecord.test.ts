@@ -3,7 +3,7 @@ import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals
 
 import { UserRecord } from './UserRecord.ts';
 import { uint8ArrayOf } from '../util/arrays.ts';
-import { PassCode } from '../authentication/PassCode.ts';
+import { PassCode } from './PassCode.ts';
 import { hexStringToBuffer } from '../util/arrays.ts';
 
 Deno.test('UserRecord', async (classTest) => {
