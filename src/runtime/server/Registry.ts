@@ -1,3 +1,5 @@
+import { fromFileUrl } from 'https://deno.land/std@0.215.0/path/mod.ts';
+
 import { CONFIG } from '../../setup/index.ts';
 import { randomCharacterSequence } from '../util/random.ts';
 import { LinkRecord } from '../database/LinkRecord.ts';
@@ -12,7 +14,7 @@ const LINK_ID_CHARACTERS = filterCharacters(CONFIG.linkIdCharacters, /[A-Z0-9\-.
 function getStorage(): DataStorage {
     switch (CONFIG.databaseType) {
         case 'sqlite':
-            return new SQLiteStorage();
+            return new SQLiteStorage(fromFileUrl(new URL('../../../storage.db', import.meta.url)));
         case 'volatile':
             return new VolatileStorage();
     }

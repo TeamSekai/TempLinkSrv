@@ -1,12 +1,12 @@
 import { LinkRecord } from './LinkRecord.ts';
 import { DataStorage } from './DataStorage.ts';
 import { DB } from 'https://deno.land/x/sqlite@v3.8/mod.ts';
-import { fromFileUrl } from 'https://deno.land/std@0.215.0/path/mod.ts';
 
 export class SQLiteStorage implements DataStorage {
-    private readonly database = new DB(fromFileUrl(new URL('../../../storage.db', import.meta.url)));
+    private readonly database: DB;
 
-    public constructor() {
+    public constructor(path: string) {
+        this.database = new DB(path);
         this.database.execute(`CREATE TABLE IF NOT EXISTS links (
             id              TEXT PRIMARY KEY,
             destination     TEXT NOT NULL,

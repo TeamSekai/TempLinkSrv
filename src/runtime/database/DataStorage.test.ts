@@ -1,10 +1,12 @@
 import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
 
+import { SQLiteStorage } from './SQLiteStorage.ts';
 import { VolatileStorage } from './VolatileStorage.ts';
 import { LinkRecord } from './LinkRecord.ts';
+import { testEach } from '../../tests/tests.ts';
+import { DataStorage } from './DataStorage.ts';
 
-function setupStorage() {
-    const storage = new VolatileStorage();
+function setupStorage(storage: DataStorage) {
     storage.insertLink('abc', new LinkRecord(new URL('https://example.com/1'), 300000, 1708100000000));
     storage.insertLink('xyz', new LinkRecord(new URL('https://example.com/3'), 450000, 1708100002000));
     storage.insertLink('987', new LinkRecord(new URL('https://example.com/4'), 60000, 1708100060000));
@@ -12,9 +14,12 @@ function setupStorage() {
     return storage;
 }
 
-Deno.test('VolatileStorage', async (classTest) => {
+testEach<[string, () => DataStorage]>(
+    ['VolatileStorage', () => new VolatileStorage()],
+    ['SQLiteStorage', () => new SQLiteStorage(':memory:')],
+)('$0', async (classTest, [_name, newStorage]) => {
     await classTest.step('Inserting to an empty storage should succeed', async () => {
-        const storage = new VolatileStorage();
+        const storage = newStorage();
         try {
             assertEquals(
                 await storage.insertLink('0', new LinkRecord(new URL('https://example.com/0'), 300000, 1708100000000)),
@@ -26,7 +31,7 @@ Deno.test('VolatileStorage', async (classTest) => {
     });
 
     await classTest.step('Attempt to insert to a storage', async () => {
-        const storage = setupStorage();
+        const storage = setupStorage(newStorage());
         try {
             const linkRecord = new LinkRecord(new URL('https://example.com/2'), 600000, 1708100001000);
             assertEquals(await storage.insertLink('abc', linkRecord), false);
@@ -38,7 +43,7 @@ Deno.test('VolatileStorage', async (classTest) => {
     });
 
     await classTest.step('Selecting from an empty storage should return null', async () => {
-        const storage = new VolatileStorage();
+        const storage = newStorage();
         try {
             assertEquals(await storage.selectLinkById('00'), null);
             assertEquals(await storage.selectLinksByExpirationDate(1800000000000), new Map<string, LinkRecord>());
@@ -48,7 +53,7 @@ Deno.test('VolatileStorage', async (classTest) => {
     });
 
     await classTest.step('Selecting from storage', async () => {
-        const storage = setupStorage();
+        const storage = setupStorage(newStorage());
         try {
             assertEquals(
                 await storage.selectLinkById('abc'),
@@ -80,7 +85,7 @@ Deno.test('VolatileStorage', async (classTest) => {
     });
 
     await classTest.step('Deleting from an empty storage should fail', async () => {
-        const storage = new VolatileStorage();
+        const storage = newStorage();
         try {
             assertEquals(await storage.deleteLink('a1'), false);
         } finally {
@@ -89,7 +94,7 @@ Deno.test('VolatileStorage', async (classTest) => {
     });
 
     await classTest.step('Deleting from a storage', async () => {
-        const storage = setupStorage();
+        const storage = setupStorage(newStorage());
         try {
             assertEquals(await storage.deleteLink('360'), false);
             assertEquals(await storage.deleteLink('abc'), true);
