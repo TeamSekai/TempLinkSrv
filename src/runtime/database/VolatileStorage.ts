@@ -6,6 +6,10 @@ export class VolatileStorage implements DataStorage {
 
     public constructor() {}
 
+    public linkCount() {
+        return Promise.resolve(this.linkTable.size);
+    }
+
     public insertLink(id: string, record: LinkRecord) {
         const linkTable = this.linkTable;
         if (linkTable.has(id)) {

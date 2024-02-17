@@ -15,6 +15,11 @@ export class SQLiteStorage implements DataStorage {
         );`);
     }
 
+    linkCount() {
+        const result = this.database.query<[number]>('SELECT COUNT(id) FROM links;');
+        return Promise.resolve(result[0][0]);
+    }
+
     insertLink(id: string, record: LinkRecord) {
         if (this.database.query('SELECT id FROM links WHERE id = ?;', [id]).length != 0) {
             return Promise.resolve(false);

@@ -5,6 +5,12 @@ import { LinkRecord } from './LinkRecord.ts';
  */
 export interface DataStorage {
     /**
+     * リンクの総数を返す。
+     * @returns このオブジェクトに格納されているリンクの総数
+     */
+    linkCount(): Promise<number>;
+
+    /**
      * リンクに関する情報を挿入する。
      * ID に対応したリンクが既に存在する場合は何もせず false を返す。
      * @param id リンク ID

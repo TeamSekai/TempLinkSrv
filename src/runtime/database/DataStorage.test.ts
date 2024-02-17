@@ -18,6 +18,24 @@ testEach<[string, () => DataStorage]>(
     ['VolatileStorage', () => new VolatileStorage()],
     ['SQLiteStorage', () => new SQLiteStorage(':memory:')],
 )('$0', async (classTest, [_name, newStorage]) => {
+    await classTest.step('The link count of an empty storage is 0', async () => {
+        const storage = newStorage();
+        try {
+            assertEquals(await storage.linkCount(), 0);
+        } finally {
+            await storage.close();
+        }
+    });
+
+    await classTest.step('Checking the link count', async () => {
+        const storage = setupStorage(newStorage());
+        try {
+            assertEquals(await storage.linkCount(), 4);
+        } finally {
+            await storage.close();
+        }
+    });
+
     await classTest.step('Inserting to an empty storage should succeed', async () => {
         const storage = newStorage();
         try {
