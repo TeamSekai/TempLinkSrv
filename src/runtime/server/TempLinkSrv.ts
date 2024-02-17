@@ -13,9 +13,9 @@ export class TempLinkSrv {
 
     private readonly server;
 
-    private readonly rootHtmlPath = fromFileUrl(new URL('../resources/html/index.html', import.meta.url));
+    private readonly rootHtmlPath = fromFileUrl(new URL('../../resources/html/index.html', import.meta.url));
 
-    private readonly notFoundHtmlPath = fromFileUrl(new URL('../resources/html/404.html', import.meta.url));
+    private readonly notFoundHtmlPath = fromFileUrl(new URL('../../resources/html/404.html', import.meta.url));
 
     private closed = false;
 
