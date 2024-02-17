@@ -1,4 +1,4 @@
-import { DB } from 'https://deno.land/x/sqlite@v3.8/mod.ts';
+import { DB } from 'x/sqlite';
 
 import { LinkRecord } from './LinkRecord.ts';
 import { DataStorage } from './DataStorage.ts';

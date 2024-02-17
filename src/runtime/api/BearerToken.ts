@@ -1,4 +1,4 @@
-import { decodeBase64, encodeBase64 } from 'https://deno.land/std@0.215.0/encoding/base64.ts';
+import { decodeBase64, encodeBase64 } from 'std/encoding/base64';
 
 import { TokenError } from './errors.ts';
 import { UUIDv4 } from '../authentication/UUIDv4.ts';

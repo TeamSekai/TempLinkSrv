@@ -1,4 +1,5 @@
-import { AssertionError } from 'https://deno.land/std@0.215.0/assert/assertion_error.ts';
+import { AssertionError } from 'std/assert/assertion_error';
+
 import { BearerToken } from '../api/BearerToken.ts';
 import { DataStorage } from '../database/DataStorage.ts';
 import { randomUint8Array } from '../util/random.ts';

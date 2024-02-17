@@ -1,6 +1,7 @@
-import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
+import { assertEquals } from 'std/assert/assert_equals';
+import { assertThrows } from 'std/assert_throws';
+
 import { randomUint8Array } from './random.ts';
-import { assertThrows } from 'https://deno.land/std@0.215.0/assert/assert_throws.ts';
 
 Deno.test('randomReadonlyUint8Array', () => {
     assertEquals(randomUint8Array(4).length, 4);

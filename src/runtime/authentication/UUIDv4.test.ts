@@ -1,6 +1,6 @@
-import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
-import { assertSpyCalls, stub } from 'https://deno.land/std@0.215.0/testing/mock.ts';
-import { assertThrows } from 'https://deno.land/std@0.215.0/assert/assert_throws.ts';
+import { assertEquals } from 'std/assert/assert_equals';
+import { assertSpyCalls, stub } from 'std/testing/mock';
+import { assertThrows } from 'std/assert_throws';
 
 import { UUIDv4 } from './UUIDv4.ts';
 import { uint8ArrayOf } from '../util/arrays.ts';

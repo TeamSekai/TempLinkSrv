@@ -1,6 +1,6 @@
 // @deno-types="npm:@types/express@4.17.21"
-import express from 'npm:express@4.18.2';
-import { fromFileUrl } from 'https://deno.land/std@0.215.0/path/mod.ts';
+import express from 'express';
+import { fromFileUrl } from 'std/path';
 
 import { CONFIG } from '../../setup/index.ts';
 import { ServerConsole } from './ServerConsole.ts';

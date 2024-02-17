@@ -1,7 +1,8 @@
+import { assertEquals } from 'std/assert/assert_equals';
+import { assertRejects } from 'std/assert/assert_rejects';
+
 import { PassCode } from './PassCode.ts';
 import { bufferToHexString, hexStringToBuffer } from '../util/arrays.ts';
-import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
-import { assertRejects } from 'https://deno.land/std@0.215.0/assert/assert_rejects.ts';
 
 Deno.test('PassCode', async (classTest) => {
     await classTest.step('hash', async () => {

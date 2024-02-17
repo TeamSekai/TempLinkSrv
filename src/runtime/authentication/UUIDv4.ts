@@ -1,4 +1,5 @@
-import * as uuid from 'https://deno.land/std@0.215.0/uuid/mod.ts';
+import * as uuid from 'std/uuid';
+
 import { TokenError } from '../api/errors.ts';
 import { bufferToHexString, hexStringToBuffer } from '../util/arrays.ts';
 

@@ -1,5 +1,5 @@
-import { assertThrows } from 'https://deno.land/std@0.215.0/assert/assert_throws.ts';
-import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
+import { assertThrows } from 'std/assert_throws';
+import { assertEquals } from 'std/assert/assert_equals';
 
 import { UserRecord } from './UserRecord.ts';
 import { uint8ArrayOf } from '../util/arrays.ts';

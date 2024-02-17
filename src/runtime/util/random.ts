@@ -1,5 +1,4 @@
-import { uint8ArrayOf } from './arrays.ts';
-import { Uint8ArrayOf } from './arrays.ts';
+import { Uint8ArrayOf, uint8ArrayOf } from './arrays.ts';
 
 /**
  * 指定した区間内のランダムな整数を返す。

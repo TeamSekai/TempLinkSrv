@@ -1,4 +1,4 @@
-import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
+import { assertEquals } from 'std/assert/assert_equals';
 import { LinkRecord } from './LinkRecord.ts';
 
 Deno.test('LinkRecord', async (classTest) => {

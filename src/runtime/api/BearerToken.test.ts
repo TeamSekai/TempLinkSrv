@@ -1,11 +1,11 @@
-import { stub } from 'https://deno.land/std@0.215.0/testing/mock.ts';
+import { stub } from 'std/testing/mock';
+import { assertEquals } from 'std/assert/assert_equals';
+import { assertThrows } from 'std/assert_throws';
 
 import { uint8ArrayOf } from '../util/arrays.ts';
 import { UUIDv4 } from '../authentication/UUIDv4.ts';
 import { BearerToken } from './BearerToken.ts';
 import { PassCode } from '../authentication/PassCode.ts';
-import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
-import { assertThrows } from 'https://deno.land/std@0.215.0/assert/assert_throws.ts';
 import { TokenError } from './errors.ts';
 
 const UUID_STRING = '39862482-dac0-4a0f-82b0-41d00fb72cb0';

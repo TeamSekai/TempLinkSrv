@@ -1,7 +1,8 @@
+import { assertEquals } from 'std/assert/assert_equals';
+
 import { Authentication } from './Authentication.ts';
 import { VolatileStorage } from '../database/VolatileStorage.ts';
 import { BearerToken } from '../api/BearerToken.ts';
-import { assertEquals } from 'https://deno.land/std@0.215.0/assert/assert_equals.ts';
 
 Deno.test('Authentication', async (classTest) => {
     await classTest.step('Testing tokens has been registered or not', async () => {

@@ -1,4 +1,4 @@
-import { parse } from 'npm:yaml@2.3.4';
+import { parse } from 'yaml';
 
 const DEFAULT_CONFIG_FILENAME = '../resources/config.yml';
 const CONFIG_FILENAME = '../../config.yml';

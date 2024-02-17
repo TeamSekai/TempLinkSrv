@@ -1,4 +1,4 @@
-import { fromFileUrl } from 'https://deno.land/std@0.215.0/path/mod.ts';
+import { fromFileUrl } from 'std/path';
 
 import { CONFIG } from '../../setup/index.ts';
 import { randomCharacterSequence } from '../util/random.ts';
