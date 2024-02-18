@@ -11,13 +11,13 @@ export const authenticationMiddleware: RequestHandler = async (req, res, next) =
         if (e instanceof AuthorizationError) {
             let wwwAuthenticate = 'Bearer realm=""';
             if (e.wwwAuthenticateMessage != null) {
-                wwwAuthenticate += ` error="${e.wwwAuthenticateMessage}"`
-                wwwAuthenticate += ` error_description="${e.clientMessage}"`
+                wwwAuthenticate += ` error="${e.wwwAuthenticateMessage}"`;
+                wwwAuthenticate += ` error_description="${e.clientMessage}"`;
             }
             res.set('WWW-Authenticate', wwwAuthenticate);
             res.status(e.status).send({
                 type: 'error',
-                description: e.clientMessage
+                description: e.clientMessage,
             });
         }
     }

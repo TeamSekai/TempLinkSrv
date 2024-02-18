@@ -59,7 +59,7 @@ export class Collector {
 
     private static async createCache(storage: DataStorage) {
         const result = await storage.selectLinksByExpirationDate(Date.now() + CACHED_EXPIRATION_TIME);
-        await ServerConsole.instance.log(`Links cached: ${result.size}`);
+        ServerConsole.instance.log(`Links cached: ${result.size}`);
         return result;
     }
 
@@ -78,7 +78,7 @@ export class Collector {
         if (!success) {
             return false;
         }
-        await ServerConsole.instance.log(`Link '${id}' has expired`);
+        ServerConsole.instance.log(`Link '${id}' has expired`);
         this.cache.delete(id);
         this.timeouts.delete(id);
         return true;

@@ -111,9 +111,9 @@ export class CommandExecutor {
         const destination = new URL(destinationString);
         const id = await Registry.instance.createLink(destination, expirationTime);
         if (id == null) {
-            await ServerConsole.instance.log('Failed to create a link');
+            ServerConsole.instance.log('Failed to create a link');
         } else {
-            await ServerConsole.instance.log(`Created a link as '${id}'`);
+            ServerConsole.instance.log(`Created a link as '${id}'`);
         }
     }
 
@@ -122,17 +122,17 @@ export class CommandExecutor {
         parser.expectEnd();
         const record = await Registry.instance.getLinkById(id);
         if (record == null) {
-            await ServerConsole.instance.error(`No link found by id '${id}'`);
+            ServerConsole.instance.error(`No link found by id '${id}'`);
         } else {
-            await ServerConsole.instance.log(
+            ServerConsole.instance.log(
                 dedent(`
-            [Link Info]
-              id:              ${id}
-              destination:     ${record.destination}
-              expiration time: ${record.expirationTime}
-              creation date:   ${new Date(record.creationDate)}
-              expiration date: ${new Date(record.expirationDate)}
-            `).trim(),
+                [Link Info]
+                  id:              ${id}
+                  destination:     ${record.destination}
+                  expiration time: ${record.expirationTime}
+                  creation date:   ${new Date(record.creationDate)}
+                  expiration date: ${new Date(record.expirationDate)}
+                `).trim(),
             );
         }
     }

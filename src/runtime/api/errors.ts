@@ -35,7 +35,11 @@ export class AuthorizationError extends ClientError {
 
     public readonly wwwAuthenticateMessage;
 
-    public constructor(message: string, wwwAuthenticateMessage: AuthorizationErrorType = null, clientMessage = message) {
+    public constructor(
+        message: string,
+        wwwAuthenticateMessage: AuthorizationErrorType = null,
+        clientMessage = message,
+    ) {
         super(message, clientMessage, authenticateErrorToStatus(wwwAuthenticateMessage));
         this.wwwAuthenticateMessage = wwwAuthenticateMessage;
     }

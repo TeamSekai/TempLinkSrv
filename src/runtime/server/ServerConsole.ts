@@ -1,9 +1,16 @@
 import { tempLinkSrv } from './TempLinkSrv.ts';
 import { CommandExecutor } from './CommandExecutor.ts';
+import { JobQueue } from '../util/JobQueue.ts';
 
 const rawConsoleLog = console.log;
 const rawConsoleWarn = console.warn;
 const rawConsoleError = console.error;
+
+interface OutputItem {
+    level: 'log' | 'warn' | 'error';
+
+    content: string;
+}
 
 export class ServerConsole {
     public static instance: ServerConsole = new ServerConsole();
@@ -23,36 +30,44 @@ export class ServerConsole {
     /** 改行コード '\r\n' または '\r\n' の前半部分 */
     private newLineFormerHalf: '\n' | '\r' | null = null;
 
+    private readonly outputQueue = new JobQueue();
+
     private constructor() {}
 
     public enable() {
         this.enableInput();
     }
 
-    public async log(...data: unknown[]) {
-        await Deno.stdout.write(ServerConsole.ERASE_LINE_BYTES);
-        rawConsoleLog(...data);
-        await Deno.stdout.write(ServerConsole.PROMPT_BYTES);
+    public log(...data: unknown[]) {
+        this.outputQueue.add(async () => {
+            await Deno.stdout.write(ServerConsole.ERASE_LINE_BYTES);
+            rawConsoleLog(...data);
+            await Deno.stdout.write(ServerConsole.PROMPT_BYTES);
+        });
     }
 
-    public async warn(...data: unknown[]) {
-        await Deno.stdout.write(ServerConsole.ERASE_LINE_BYTES);
-        rawConsoleWarn(...data);
-        await Deno.stdout.write(ServerConsole.PROMPT_BYTES);
+    public warn(...data: unknown[]) {
+        this.outputQueue.add(async () => {
+            await Deno.stdout.write(ServerConsole.ERASE_LINE_BYTES);
+            rawConsoleWarn(...data);
+            await Deno.stdout.write(ServerConsole.PROMPT_BYTES);
+        });
     }
 
-    public async error(...data: unknown[]) {
-        await Deno.stdout.write(ServerConsole.ERASE_LINE_BYTES);
-        rawConsoleError(...data);
-        await Deno.stdout.write(ServerConsole.PROMPT_BYTES);
+    public error(...data: unknown[]) {
+        this.outputQueue.add(async () => {
+            await Deno.stdout.write(ServerConsole.ERASE_LINE_BYTES);
+            rawConsoleError(...data);
+            await Deno.stdout.write(ServerConsole.PROMPT_BYTES);
+        });
     }
 
     public async close() {
-        await this.log('Server closed!');
+        this.log('Server closed!');
     }
 
     private async enableInput() {
-        await Deno.stdout.write(ServerConsole.PROMPT_BYTES);
+        this.outputQueue.add(() => Deno.stdout.write(ServerConsole.PROMPT_BYTES));
         for await (const chunk of Deno.stdin.readable) {
             const text = this.decoder.decode(chunk);
             for (const c of text) {
@@ -89,7 +104,7 @@ export class ServerConsole {
     private async flushLine() {
         await this.acceptLine(this.currentLine);
         this.currentLine = '';
-        await Deno.stdout.write(ServerConsole.PROMPT_BYTES);
+        this.outputQueue.add(() => Deno.stdout.write(ServerConsole.PROMPT_BYTES));
     }
 
     private async acceptLine(line: string) {
@@ -97,5 +112,6 @@ export class ServerConsole {
     }
 }
 
-console.log = rawConsoleLog;
-console.error = rawConsoleError;
+console.log = ServerConsole.instance.log;
+console.warn = ServerConsole.instance.warn;
+console.error = ServerConsole.instance.error;
