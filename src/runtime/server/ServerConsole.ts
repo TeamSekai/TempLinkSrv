@@ -106,6 +106,6 @@ export class ServerConsole {
     }
 }
 
-console.log = ServerConsole.instance.log;
-console.warn = ServerConsole.instance.warn;
-console.error = ServerConsole.instance.error;
+console.log = ServerConsole.instance.log.bind(ServerConsole.instance);
+console.warn = ServerConsole.instance.warn.bind(ServerConsole.instance);
+console.error = ServerConsole.instance.error.bind(ServerConsole.instance);
