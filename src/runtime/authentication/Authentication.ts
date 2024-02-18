@@ -16,7 +16,7 @@ export class Authentication {
         const token = BearerToken.generate();
         const salt = randomUint8Array(32);
         const hash = await token.passCode.hash(salt);
-        const success = this.storage.insertUser(token.user, new UserRecord(salt, hash));
+        const success = await this.storage.insertUser(token.user, new UserRecord(salt, hash));
         if (!success) {
             throw new AssertionError('Failed to insert a new user');
         }

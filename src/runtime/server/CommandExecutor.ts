@@ -88,6 +88,9 @@ export class CommandExecutor {
                 case 'link-delete':
                     await this.linkDelete(parser);
                     break;
+                case 'token-create':
+                    await this.tokenCreate(parser);
+                    break;
                 case 'stop':
                     await this.stop(parser);
                     break;
@@ -146,6 +149,12 @@ export class CommandExecutor {
         } else {
             ServerConsole.instance.error(`Failed to delete link '${id}'`);
         }
+    }
+
+    private async tokenCreate(parser: Parser) {
+        parser.expectEnd();
+        const token = await Registry.instance.authentication.generateToken();
+        ServerConsole.instance.log(token.toString());
     }
 
     private async stop(parser: Parser) {
