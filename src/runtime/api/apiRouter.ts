@@ -1,5 +1,5 @@
 // @deno-types="npm:@types/express@4.17.21"
-import { Router } from 'express';
+import { Request, Response, Router } from 'express';
 import * as express from 'express';
 
 import { authenticationMiddleware } from '../authentication/authenticationMiddleware.ts';
@@ -13,20 +13,37 @@ export const apiRouter = Router();
 apiRouter.use(authenticationMiddleware);
 apiRouter.use(express.json());
 
-apiRouter.post('/links', async (req, res) => {
-    try {
-        ServerConsole.instance.log(req.body);
+function wrapError(handler: (req: Request, res: Response) => Promise<void>) {
+    return async (req: Request, res: Response) => {
+        try {
+            await handler(req, res);
+        } catch (e) {
+            if (e instanceof ClientError) {
+                res.status(e.status).send({
+                    type: 'error',
+                    description: e.clientMessage,
+                });
+            } else {
+                ServerConsole.instance.error(e);
+            }
+        }
+    };
+}
+
+apiRouter.post(
+    '/links',
+    wrapError(async (req, res) => {
         const request = requireLinkRequest(req.body);
         const response = await LinkAPI.instance.create(request);
         res.status(201).send(JSON.stringify(response));
-    } catch (e) {
-        if (e instanceof ClientError) {
-            res.status(400).send({
-                type: 'error',
-                description: e.clientMessage,
-            });
-        } else {
-            ServerConsole.instance.error(e);
-        }
-    }
-});
+    }),
+);
+
+apiRouter.get(
+    '/links/:linkId',
+    wrapError(async (req, res) => {
+        const id = req.params.linkId;
+        const response = await LinkAPI.instance.get(id);
+        res.status(201).send(JSON.stringify(response));
+    }),
+);
