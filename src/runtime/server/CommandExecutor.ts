@@ -112,7 +112,7 @@ export class CommandExecutor {
             );
         }
         const destination = new URL(destinationString);
-        const id = await Registry.instance.createLink(destination, expirationTime);
+        const id = (await Registry.instance.createLink(destination, expirationTime))?.id;
         if (id == null) {
             ServerConsole.instance.log('Failed to create a link');
         } else {

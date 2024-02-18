@@ -62,7 +62,7 @@ export class Registry {
             const success = id != 'api' && await this.storage.insertLink(id, record);
             if (success) {
                 this.collector?.addLink(id, record);
-                return id;
+                return { id, record };
             }
         }
         return null;
