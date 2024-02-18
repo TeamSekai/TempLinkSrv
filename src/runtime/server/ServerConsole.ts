@@ -6,12 +6,6 @@ const rawConsoleLog = console.log;
 const rawConsoleWarn = console.warn;
 const rawConsoleError = console.error;
 
-interface OutputItem {
-    level: 'log' | 'warn' | 'error';
-
-    content: string;
-}
-
 export class ServerConsole {
     public static instance: ServerConsole = new ServerConsole();
 
@@ -62,7 +56,7 @@ export class ServerConsole {
         });
     }
 
-    public async close() {
+    public close() {
         this.log('Server closed!');
     }
 
