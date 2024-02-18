@@ -42,8 +42,15 @@ apiRouter.post(
 apiRouter.get(
     '/links/:linkId',
     wrapError(async (req, res) => {
-        const id = req.params.linkId;
-        const response = await LinkAPI.instance.get(id);
-        res.status(201).send(JSON.stringify(response));
+        const response = await LinkAPI.instance.get(req.params.linkId);
+        res.status(200).send(JSON.stringify(response));
+    }),
+);
+
+apiRouter.delete(
+    '/links/:linkId',
+    wrapError(async (req, res) => {
+        await LinkAPI.instance.delete(req.params.linkId);
+        res.status(204).send();
     }),
 );

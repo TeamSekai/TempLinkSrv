@@ -75,6 +75,13 @@ export class LinkAPI {
         }
         return toResource(id, result);
     }
+
+    public async delete(id: string): Promise<void> {
+        const result = await Registry.instance.deleteLink(id);
+        if (!result) {
+            throw new ClientError(`Link '${id}' was not found`);
+        }
+    }
 }
 
 function stringToURL(s: string) {
