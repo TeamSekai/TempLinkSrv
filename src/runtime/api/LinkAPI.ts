@@ -1,5 +1,6 @@
 import { Registry } from '../server/Registry.ts';
 import { ClientError } from './errors.ts';
+import { CONFIG } from '../../setup/index.ts';
 
 export interface LinkRequest {
     destination: string;
@@ -8,6 +9,7 @@ export interface LinkRequest {
 
 export interface LinkResource {
     type: 'link_resource';
+    link: string;
     id: string;
     destination: string;
     expiration_time: number;
@@ -70,6 +72,7 @@ export class LinkAPI {
         const { id, record } = result;
         return {
             type: 'link_resource',
+            link: `https://${CONFIG.linkDomain}/${id}`,
             id,
             destination: record.destination.toString(),
             expiration_time: record.expirationTime,

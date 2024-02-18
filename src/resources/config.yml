@@ -1,3 +1,6 @@
+# リンクを公開するドメイン名
+linkDomain: link.example.com
+
 # リンクの作成やアクセスを行うポート番号
 linkPort: 16528
 

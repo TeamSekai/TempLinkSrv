@@ -7,6 +7,7 @@ const CONFIG_PATH = new URL(CONFIG_FILENAME, import.meta.url);
 
 // プロパティ名は config.yml と一致させること
 export interface Config {
+    readonly linkDomain: string;
     readonly linkHostname: string;
     readonly linkPort: number;
     readonly linkIdCharacters: string;
