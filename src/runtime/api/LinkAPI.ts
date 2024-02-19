@@ -2,13 +2,14 @@ import { Registry } from '../server/Registry.ts';
 import { ClientError } from './errors.ts';
 import { CONFIG } from '../../setup/index.ts';
 import { LinkRecord } from '../database/LinkRecord.ts';
+import { ResponseValue } from './API.ts';
 
 export interface LinkRequest {
     destination: string;
     expirationTime: number;
 }
 
-export interface LinkResource {
+export interface LinkResource extends ResponseValue {
     type: 'link_resource';
     link: string;
     id: string;

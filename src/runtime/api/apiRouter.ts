@@ -5,6 +5,8 @@ import { requireLinkRequest } from './LinkAPI.ts';
 import { LinkAPI } from './LinkAPI.ts';
 import { ClientError } from './errors.ts';
 import { ServerConsole } from '../server/ServerConsole.ts';
+import { resultOk } from './API.ts';
+import { resultError } from './API.ts';
 
 export const apiRouter = new Hono();
 
@@ -14,7 +16,8 @@ apiRouter.post(
     '/links',
     async (c) => {
         const request = requireLinkRequest(await c.req.json());
-        const response = await LinkAPI.instance.create(request);
+        const result = await LinkAPI.instance.create(request);
+        const response = resultOk(result);
         c.status(201);
         return c.body(JSON.stringify(response));
     },
@@ -23,7 +26,8 @@ apiRouter.post(
 apiRouter.get(
     '/links/:linkId',
     async (c) => {
-        const response = await LinkAPI.instance.get(c.req.param('linkId'));
+        const result = await LinkAPI.instance.get(c.req.param('linkId'));
+        const response = resultOk(result);
         c.status(200);
         return c.body(JSON.stringify(response));
     },
@@ -33,21 +37,27 @@ apiRouter.delete(
     '/links/:linkId',
     async (c) => {
         await LinkAPI.instance.delete(c.req.param('linkId'));
-        c.status(204);
-        return c.body(null);
+        const response = resultOk(null);
+        c.status(200);
+        return c.body(JSON.stringify(response));
     },
 );
 
 apiRouter.onError((e, c) => {
     if (e instanceof ClientError) {
         c.status(e.status);
-        return c.body(JSON.stringify({
+        const response = resultError({
             type: 'error',
             description: e.clientMessage,
-        }));
+        });
+        return c.body(JSON.stringify(response));
     } else {
         ServerConsole.instance.error(e);
+        const response = resultError({
+            type: 'error',
+            description: 'Internal server error',
+        });
         c.status(500);
-        return c.body(null);
+        return c.body(JSON.stringify(response));
     }
 });
