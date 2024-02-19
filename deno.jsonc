@@ -25,7 +25,6 @@
         "hono": "https://deno.land/x/hono@v4.0.4/mod.ts",
         "hono/middleware": "https://deno.land/x/hono@v4.0.4/middleware.ts",
         "hono/utils/http-status": "https://deno.land/x/hono@v4.0.4/utils/http-status.ts",
-        "express": "npm:express@4.18.2",
         "yaml": "npm:yaml@2.3.4"
     }
 }
