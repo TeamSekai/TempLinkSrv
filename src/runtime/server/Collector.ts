@@ -80,7 +80,6 @@ export class Collector {
         }
         ServerConsole.instance.log(`Link '${id}' has expired`);
         this.cache.delete(id);
-        this.timeouts.delete(id);
         return true;
     }
 }
