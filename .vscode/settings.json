@@ -3,6 +3,7 @@
     "deno.config": "./deno.jsonc",
     "liveServer.settings.root": "./cov_profile/html/",
     "cSpell.words": [
-        "hono"
+        "hono",
+        "templinksrv"
     ]
 }

@@ -10,6 +10,8 @@ import { Collector } from './Collector.ts';
 import { filterCharacters } from '../util/strings.ts';
 import { Authentication } from '../authentication/Authentication.ts';
 import { JobQueue } from '../util/JobQueue.ts';
+import { MongoDBStorage } from '../database/MongoDBStorage.ts';
+import { AssertionError } from 'std/assert/assertion_error';
 
 const LINK_ID_CHARACTERS = filterCharacters(CONFIG.linkIdCharacters, /[A-Z0-9\-._~]/);
 
@@ -19,6 +21,10 @@ function getStorage(): DataStorage {
             return new SQLiteStorage(fromFileUrl(new URL('../../../storage.db', import.meta.url)));
         case 'volatile':
             return new VolatileStorage();
+        case 'mongodb':
+            return new MongoDBStorage();
+        default:
+            throw new AssertionError(CONFIG.databaseType);
     }
 }
 

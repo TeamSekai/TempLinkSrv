@@ -23,6 +23,24 @@ linkExpirationPrepareTime: 3600000
 # キャッシュを更新する頻度
 linkExpirationPrepareInterval: 1800000
 
-# sqlite もしくは volatile
+# sqlite, mongodb, もしくは volatile
 # volatile を選択するとサーバー停止時にリンクがすべて削除されます。
 databaseType: sqlite
+
+# データベースのホスト名 (mongodb のみ)
+databaseHostname: 127.0.0.1
+
+# データベースのポート番号 (mongodb のみ)
+databasePort: 27017
+
+# データベースのユーザー名 (mongodb のみ)
+databaseUsername: admin
+
+# データベースのパスワード (mongodb のみ)
+databasePassword: password
+
+# データベースの名前 (mongodb のみ)
+databaseName: templinksrv
+
+# データベースのログイン時に認証を行うデータベースの名前 (mongodb のみ)
+databaseAuthenticationSource: admin

@@ -15,7 +15,13 @@ export interface Config {
     readonly linkIdTrials: number;
     readonly linkExpirationPrepareTime: number;
     readonly linkExpirationPrepareInterval: number;
-    readonly databaseType: 'sqlite' | 'volatile';
+    readonly databaseType: 'sqlite' | 'mongodb' | 'volatile';
+    readonly databaseHostname: string;
+    readonly databasePort: number;
+    readonly databaseUsername: string;
+    readonly databasePassword: string;
+    readonly databaseName: string;
+    readonly databaseAuthenticationSource: string;
 }
 
 async function getConfigContent() {
@@ -40,6 +46,12 @@ async function getConfig() {
 
 export const CONFIG = await getConfig();
 
+const networks: string[] = [];
+networks.push(`${CONFIG.linkHostname}:${CONFIG.linkPort}`);
+if (CONFIG.databaseType == 'mongodb') {
+    networks.push(`${CONFIG.databaseHostname}:${CONFIG.databasePort}`);
+}
+
 console.log(`-- Setup is done! --
 -- Network will be allowed at: --
-${CONFIG.linkHostname}:${CONFIG.linkPort}`);
+${networks.join(',')}`);
