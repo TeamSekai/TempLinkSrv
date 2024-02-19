@@ -61,8 +61,19 @@ export class MongoDBStorage implements DataStorage {
 
     selectLinksByExpirationDate = async (expirationDate: number) => {
         const result = (await this.clientPromise).collections.links.aggregate([
-            { $project: { expirationDate: { $add: ['$creationDate', '$expirationTime'] } } },
-            { $match: { expirationDate: { $lte: expirationDate } } },
+            {
+                $project: {
+                    destination: 1,
+                    expirationTime: 1,
+                    creationData: 1,
+                    expirationDate: { $add: ['$creationDate', '$expirationTime'] },
+                },
+            },
+            {
+                $match: {
+                    expirationDate: { $lte: expirationDate },
+                },
+            },
         ]);
         return new Map(
             await result.map(
