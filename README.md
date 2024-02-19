@@ -48,9 +48,9 @@ User-Agent: curl/7.87.0
 Accept: */*
 Authorization: Bearer Tl0_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Content-Type: application/json
-Content-Length: 66
+Content-Length: 63
 
-{"destination": "https://example.com/", "expiration_time": 300000}
+{"destination":"https://example.com/","expiration_time":300000}
 ```
 
 HTTP レスポンスの例:
@@ -58,13 +58,14 @@ HTTP レスポンスの例:
 ```http
 HTTP/1.1 201 Created
 Server: nginx/1.24.0
-Date: Mon, 19 Feb 2024 12:39:59 GMT
-Content-Type: text/plain;charset=UTF-8
+Date: Mon, 19 Feb 2024 13:08:09 GMT
+Content-Type: application/json
 Content-Length: 224
 Connection: keep-alive
+content-location: /api/links/xxxxx
 vary: Accept-Encoding
 
-{"api_version":1,"ok":{"type":"link_resource","link":"https://link.example.com/xxxxx","id":"xxxxx","destination":"https://example.com/","expiration_time":300000,"creation_date":1708342799553,"expiration_date":1708343099553}}
+{"api_version":1,"ok":{"type":"link_resource","link":"https://link.example.com/xxxxx","id":"xxxxx","destination":"https://example.com/","expiration_time":300000,"creation_date":1708348089644,"expiration_date":1708348389644}}
 ```
 
 ### `links` リソース
@@ -76,7 +77,7 @@ vary: Accept-Encoding
 エンドポイント:
 
 ```
-https://[linkDomain]/links
+/api/links
 ```
 
 リクエスト:
@@ -108,7 +109,7 @@ https://[linkDomain]/links
 エンドポイント:
 
 ```
-https://[linkDomain]/links/:linkId
+/api/links/:linkID
 ```
 
 `:linkID` はリンク ID に置き換えます。
@@ -136,7 +137,7 @@ https://[linkDomain]/links/:linkId
 エンドポイント:
 
 ```
-https://[linkDomain]/links/:linkId
+/api/links/:linkID
 ```
 
 `:linkID` はリンク ID に置き換えます。

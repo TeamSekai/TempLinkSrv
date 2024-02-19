@@ -11,6 +11,10 @@ import { resultError } from './api.ts';
 export const apiRouter = new Hono();
 
 apiRouter.use('*', authenticationMiddleware);
+apiRouter.use('*', async (c, next) => {
+    c.header('Content-Type', 'application/json');
+    await next();
+});
 
 apiRouter.post(
     '/links',
@@ -19,6 +23,7 @@ apiRouter.post(
         const result = await LinkAPI.instance.create(request);
         const response = resultOk(result);
         c.status(201);
+        c.header('Content-Location', `/api/links/${result.id}`);
         return c.body(JSON.stringify(response));
     },
 );
