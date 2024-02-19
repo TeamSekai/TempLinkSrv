@@ -33,7 +33,7 @@ export class ServerConsole {
     }
 
     public log(...data: unknown[]) {
-        this.outputQueue.add(async () => {
+        this.outputQueue.run(async () => {
             await Deno.stdout.write(ServerConsole.ERASE_LINE_BYTES);
             rawConsoleLog(...data);
             await Deno.stdout.write(ServerConsole.PROMPT_BYTES);
@@ -41,7 +41,7 @@ export class ServerConsole {
     }
 
     public warn(...data: unknown[]) {
-        this.outputQueue.add(async () => {
+        this.outputQueue.run(async () => {
             await Deno.stdout.write(ServerConsole.ERASE_LINE_BYTES);
             rawConsoleWarn(...data);
             await Deno.stdout.write(ServerConsole.PROMPT_BYTES);
@@ -49,7 +49,7 @@ export class ServerConsole {
     }
 
     public error(...data: unknown[]) {
-        this.outputQueue.add(async () => {
+        this.outputQueue.run(async () => {
             await Deno.stdout.write(ServerConsole.ERASE_LINE_BYTES);
             rawConsoleError(...data);
             await Deno.stdout.write(ServerConsole.PROMPT_BYTES);
@@ -61,7 +61,7 @@ export class ServerConsole {
     }
 
     private async enableInput() {
-        this.outputQueue.add(() => Deno.stdout.write(ServerConsole.PROMPT_BYTES));
+        this.outputQueue.run(() => Deno.stdout.write(ServerConsole.PROMPT_BYTES));
         for await (const chunk of Deno.stdin.readable) {
             const text = this.decoder.decode(chunk);
             for (const c of text) {
@@ -98,7 +98,7 @@ export class ServerConsole {
     private async flushLine() {
         await this.acceptLine(this.currentLine);
         this.currentLine = '';
-        this.outputQueue.add(() => Deno.stdout.write(ServerConsole.PROMPT_BYTES));
+        this.outputQueue.run(() => Deno.stdout.write(ServerConsole.PROMPT_BYTES));
     }
 
     private async acceptLine(line: string) {

@@ -8,19 +8,19 @@ function timeout(time: number) {
 Deno.test('JobQueue', async () => {
     const queue = new JobQueue();
     let result = '0';
-    queue.add(async () => {
+    queue.run(async () => {
         await timeout(20);
         result += '1';
-    });
-    queue.add(async () => {
+    }).then(() => result += 'a');
+    queue.run(async () => {
         await timeout(30);
         result += '2';
-    });
-    queue.add(async () => {
+    }).then(() => result += 'b');
+    queue.run(async () => {
         await timeout(10);
         result += '3';
-    });
+    }).then(() => result += 'c');
     await timeout(100);
-    assertEquals(result, '0123');
+    assertEquals(result, '01a2b3c');
     assertEquals(queue.length, 0);
 });

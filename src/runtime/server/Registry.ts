@@ -9,6 +9,7 @@ import { VolatileStorage } from '../database/VolatileStorage.ts';
 import { Collector } from './Collector.ts';
 import { filterCharacters } from '../util/strings.ts';
 import { Authentication } from '../authentication/Authentication.ts';
+import { JobQueue } from '../util/JobQueue.ts';
 
 const LINK_ID_CHARACTERS = filterCharacters(CONFIG.linkIdCharacters, /[A-Z0-9\-._~]/);
 
@@ -38,6 +39,8 @@ export class Registry {
 
     private collectorPromise: Promise<Collector>;
 
+    private creationQueue = new JobQueue();
+
     private constructor() {
         const storage = getStorage();
         this.storage = storage;
@@ -59,11 +62,15 @@ export class Registry {
         const maxTrials = CONFIG.linkIdTrials;
         for (let i = 0; i < maxTrials; i++) {
             const id = randomCharacterSequence(LINK_ID_CHARACTERS, CONFIG.linkIdLength);
-            const success = id != 'api' && await this.storage.insertLink(id, record);
-            if (success) {
-                this.collector?.addLink(id, record);
-                return { id, record };
+            if (id == 'api') {
+                continue;
             }
+            const success = await this.creationQueue.run(() => this.storage.insertLink(id, record));
+            if (!success) {
+                continue;
+            }
+            this.collectorPromise.then((collector) => collector.addLink(id, record));
+            return { id, record };
         }
         return null;
     }

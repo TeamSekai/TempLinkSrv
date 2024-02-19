@@ -1,3 +1,5 @@
+import { resolve } from 'std/path';
+
 /**
  * 非同期タスクを追加された順に実行するジョブキュー。
  */
@@ -26,10 +28,20 @@ export class JobQueue {
     /**
      * このジョブキューに非同期タスクを追加する。
      * @param task タスク
+     * @returns 与えられたタスクを実行する Promise
      */
-    public add(task: () => Promise<unknown>) {
-        this.tasks.push(task);
-        this.onAdd();
+    public run<T>(task: () => Promise<T>): Promise<T> {
+        return new Promise((resolve, reject) => {
+            this.tasks.push(async () => {
+                try {
+                    const result = await task();
+                    resolve(result);
+                } catch (e) {
+                    reject(e);
+                }
+            });
+            this.onAdd();
+        });
     }
 
     private async onAdd() {
