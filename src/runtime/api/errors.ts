@@ -1,13 +1,15 @@
+import { StatusCode } from 'hono/utils/http-status';
+
 export class ClientError extends Error {
     static {
         ClientError.prototype.name = 'ClientError';
     }
 
-    public readonly status: number;
+    public readonly status: StatusCode;
 
     public readonly clientMessage: string;
 
-    public constructor(message: string, clientMessage = message, status = 400) {
+    public constructor(message: string, clientMessage = message, status: StatusCode = 400) {
         super(`${clientMessage}; ${message}`);
         this.status = status;
         this.clientMessage = clientMessage;

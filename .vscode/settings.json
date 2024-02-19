@@ -1,5 +1,8 @@
 {
     "deno.enable": true,
     "deno.config": "./deno.jsonc",
-    "liveServer.settings.root": "./cov_profile/html/"
+    "liveServer.settings.root": "./cov_profile/html/",
+    "cSpell.words": [
+        "hono"
+    ]
 }

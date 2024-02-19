@@ -1,15 +1,13 @@
-// @deno-types="npm:@types/express@4.17.21"
-import express from 'express';
-
 import { CONFIG } from '../../setup/index.ts';
 import { ServerConsole } from './ServerConsole.ts';
 import { Registry } from './Registry.ts';
 import { router } from './router.ts';
+import { Hono } from 'hono';
 
 export class TempLinkSrv {
     public static readonly instance = new TempLinkSrv();
 
-    private readonly app = express();
+    private readonly app = new Hono();
 
     private readonly server;
 
@@ -17,24 +15,18 @@ export class TempLinkSrv {
 
     private constructor() {
         ServerConsole.instance.enable();
-        this.app.use(router);
-        this.server = this.app.listen(CONFIG.linkPort, CONFIG.linkHostname);
+        this.app.route('/', router);
+        this.server = Deno.serve({
+            port: CONFIG.linkPort,
+            hostname: CONFIG.linkHostname,
+        }, this.app.fetch);
     }
 
     public close() {
         return Promise.all([
             Registry.instance.close(),
             ServerConsole.instance.close(),
-            new Promise<void>((resolve, reject) => {
-                this.server.close((err: unknown) => {
-                    if (err == null) {
-                        this.closed = true;
-                        resolve();
-                    } else {
-                        reject(err);
-                    }
-                });
-            }),
+            this.server.shutdown(),
         ]);
     }
 

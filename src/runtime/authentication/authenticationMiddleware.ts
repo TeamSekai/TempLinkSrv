@@ -1,12 +1,12 @@
-// @deno-types="npm:@types/express@4.17.21"
-import { RequestHandler } from 'express';
+import { MiddlewareHandler } from 'hono';
+
 import { AuthorizationError, TokenError } from '../api/errors.ts';
 import { BearerToken } from '../api/BearerToken.ts';
 import { Registry } from '../server/Registry.ts';
 
-export const authenticationMiddleware: RequestHandler = async (req, res, next) => {
+export const authenticationMiddleware: MiddlewareHandler = async (c, next) => {
     try {
-        await requireValidToken(req.header('Authorization'));
+        await requireValidToken(c.req.header('Authorization'));
     } catch (e) {
         if (e instanceof AuthorizationError) {
             let wwwAuthenticate = 'Bearer realm=""';
@@ -14,14 +14,15 @@ export const authenticationMiddleware: RequestHandler = async (req, res, next) =
                 wwwAuthenticate += ` error="${e.wwwAuthenticateMessage}"`;
                 wwwAuthenticate += ` error_description="${e.clientMessage}"`;
             }
-            res.set('WWW-Authenticate', wwwAuthenticate);
-            res.status(e.status).send({
+            c.set('WWW-Authenticate', wwwAuthenticate);
+            c.status(e.status);
+            return c.body(JSON.stringify({
                 type: 'error',
                 description: e.clientMessage,
-            });
+            }));
         }
     }
-    next();
+    await next();
 };
 
 async function requireValidToken(authorizationField: string | undefined) {

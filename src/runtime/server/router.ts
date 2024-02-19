@@ -1,35 +1,46 @@
-// @deno-types="npm:@types/express@4.17.21"
-import { Router } from 'express';
-import { fromFileUrl } from 'std/path';
+import { fromFileUrl, relative } from 'std/path';
+import { Hono } from 'hono';
+import { serveStatic } from 'hono/middleware';
 
 import { Registry } from './Registry.ts';
 import { apiRouter } from '../api/apiRouter.ts';
 
-export const router = Router();
+export const router = new Hono();
 
-const rootHtmlPath = fromFileUrl(new URL('../../resources/html/index.html', import.meta.url));
+const rootHtmlPath = relative(Deno.cwd(), fromFileUrl(new URL('../../resources/html/index.html', import.meta.url)));
 
-const notFoundHtmlPath = fromFileUrl(new URL('../../resources/html/404.html', import.meta.url));
+const notFoundHtmlPath = relative(Deno.cwd(), fromFileUrl(new URL('../../resources/html/404.html', import.meta.url)));
 
-router.use((_req, _res, next) => {
+router.use('*', async (_c, next) => {
     console.log(`Time: ${Date.now()}`);
-    next();
+    await next();
 });
 
-router.get('/', (_req, res) => {
-    res.sendFile(rootHtmlPath);
-});
+router.use(
+    '/',
+    serveStatic({
+        path: rootHtmlPath,
+    }),
+);
 
-router.get('/:linkId', async (req, res, next) => {
-    const id = req.params.linkId;
+router.get('/:linkId', async (c, next) => {
+    const id = c.req.param('linkId');
     if (id == 'api') {
-        return next();
+        await next();
     }
     const linkRecord = await Registry.instance.getLinkById(id);
     if (linkRecord == null) {
-        return res.status(404).sendFile(notFoundHtmlPath);
+        await next();
+    } else {
+        return c.redirect(linkRecord.destination.toString(), 301);
     }
-    return res.redirect(301, linkRecord.destination.toString());
 });
 
-router.use('/api', apiRouter);
+router.route('/api', apiRouter);
+
+router.get(
+    '*',
+    serveStatic({
+        path: notFoundHtmlPath,
+    }),
+);
