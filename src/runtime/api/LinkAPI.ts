@@ -60,7 +60,7 @@ export function requireLinkRequest(body: unknown): LinkRequest {
 export class LinkAPI {
     public static readonly instance = new LinkAPI();
 
-    public async create(linkRequest: LinkRequest): Promise<LinkResource | null> {
+    public async create(linkRequest: LinkRequest): Promise<LinkResource> {
         const destination = stringToURL(linkRequest.destination);
         const result = await Registry.instance.createLink(destination, linkRequest.expirationTime);
         if (result == null) {
