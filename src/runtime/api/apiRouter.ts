@@ -5,8 +5,8 @@ import { requireLinkRequest } from './LinkAPI.ts';
 import { LinkAPI } from './LinkAPI.ts';
 import { ClientError } from './errors.ts';
 import { ServerConsole } from '../server/ServerConsole.ts';
-import { resultOk } from './API.ts';
-import { resultError } from './API.ts';
+import { resultOk } from './api.ts';
+import { resultError } from './api.ts';
 
 export const apiRouter = new Hono();
 

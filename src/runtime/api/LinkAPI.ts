@@ -2,7 +2,7 @@ import { Registry } from '../server/Registry.ts';
 import { ClientError } from './errors.ts';
 import { CONFIG } from '../../setup/index.ts';
 import { LinkRecord } from '../database/LinkRecord.ts';
-import { ResponseValue } from './API.ts';
+import { ResponseValue } from './api.ts';
 
 export interface LinkRequest {
     destination: string;
