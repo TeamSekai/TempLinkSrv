@@ -22,6 +22,8 @@ export interface Config {
     readonly databasePassword: string;
     readonly databaseName: string;
     readonly databaseAuthenticationSource: string;
+    readonly apiAccessIpWhitelist: string[];
+    readonly useXForwardedFor: string;
 }
 
 async function getConfigContent() {

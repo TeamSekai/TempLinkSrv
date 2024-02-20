@@ -44,3 +44,15 @@ databaseName: templinksrv
 
 # データベースのログイン時に認証を行うデータベースの名前 (mongodb のみ)
 databaseAuthenticationSource: admin
+
+# API にアクセスできる IP アドレスの範囲
+apiAccessIpWhitelist:
+  - 127.0.0.1/8     # ループバックアドレス
+  - ::1/128         # ループバックアドレス (IPv6)
+  - 10.0.0.0/8      # プライベート IP アドレス クラス A
+  - 172.16.0.0/12   # プライベート IP アドレス クラス B
+  - 192.168.0.0/16  # プライベート IP アドレス クラス C
+  - fc00::/7        # ユニークローカルアドレス
+
+# IP アドレスの確認に X-Forwarded-For ヘッダを用いるかどうか
+useXForwardedFor: false

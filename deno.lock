@@ -2,9 +2,20 @@
   "version": "3",
   "packages": {
     "specifiers": {
+      "npm:ip-range-check@0.2.0": "npm:ip-range-check@0.2.0",
       "npm:yaml@2.3.4": "npm:yaml@2.3.4"
     },
     "npm": {
+      "ip-range-check@0.2.0": {
+        "integrity": "sha512-oaM3l/3gHbLlt/tCWLvt0mj1qUaI+STuRFnUvARGCujK9vvU61+2JsDpmkMzR4VsJhuFXWWgeKKVnwwoFfzCqw==",
+        "dependencies": {
+          "ipaddr.js": "ipaddr.js@1.9.1"
+        }
+      },
+      "ipaddr.js@1.9.1": {
+        "integrity": "sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==",
+        "dependencies": {}
+      },
       "yaml@2.3.4": {
         "integrity": "sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==",
         "dependencies": {}
@@ -274,6 +285,7 @@
   },
   "workspace": {
     "dependencies": [
+      "npm:ip-range-check@0.2.0",
       "npm:yaml@2.3.4"
     ]
   }

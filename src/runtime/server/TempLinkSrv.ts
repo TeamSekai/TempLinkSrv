@@ -4,10 +4,12 @@ import { Registry } from './Registry.ts';
 import { router } from './router.ts';
 import { Hono } from 'hono';
 
+export type Bindings = {
+    info: Deno.ServeHandlerInfo;
+};
+
 export class TempLinkSrv {
     public static readonly instance = new TempLinkSrv();
-
-    private readonly app = new Hono();
 
     private readonly server;
 
@@ -15,11 +17,14 @@ export class TempLinkSrv {
 
     private constructor() {
         ServerConsole.instance.enable();
-        this.app.route('/', router);
+        const app = new Hono<{ Bindings: Bindings }>();
+        app.route('/', router);
         this.server = Deno.serve({
             port: CONFIG.linkPort,
             hostname: CONFIG.linkHostname,
-        }, this.app.fetch);
+        }, (request, info) => {
+            return app.fetch(request, { info });
+        });
     }
 
     public close() {

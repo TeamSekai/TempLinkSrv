@@ -4,8 +4,9 @@ import { serveStatic } from 'hono/middleware';
 
 import { Registry } from './Registry.ts';
 import { apiRouter } from '../api/apiRouter.ts';
+import { Bindings } from '../server/TempLinkSrv.ts';
 
-export const router = new Hono();
+export const router = new Hono<{ Bindings: Bindings }>();
 
 const rootHtmlPath = relative(Deno.cwd(), fromFileUrl(new URL('../../resources/html/index.html', import.meta.url)));
 
@@ -26,7 +27,7 @@ router.use(
 router.get('/:linkId', async (c, next) => {
     const id = c.req.param('linkId');
     if (id == 'api') {
-        await next();
+        return await next();
     }
     const linkRecord = await Registry.instance.getLinkById(id);
     if (linkRecord == null) {

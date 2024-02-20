@@ -1,4 +1,5 @@
-import { Hono } from 'hono';
+import { Context, Hono } from 'hono';
+import ipRangeCheck from 'ip-range-check';
 
 import { authenticationMiddleware } from '../authentication/authenticationMiddleware.ts';
 import { requireLinkRequest } from './LinkAPI.ts';
@@ -7,8 +8,28 @@ import { ClientError } from './errors.ts';
 import { ServerConsole } from '../server/ServerConsole.ts';
 import { resultOk } from './api.ts';
 import { resultError } from './api.ts';
+import { Bindings } from '../server/TempLinkSrv.ts';
+import { CONFIG } from '../../setup/index.ts';
 
-export const apiRouter = new Hono();
+export const apiRouter = new Hono<{ Bindings: Bindings }>();
+
+function getClientIp(c: Context<{ Bindings: Bindings }>) {
+    if (CONFIG.useXForwardedFor) {
+        return c.req.header('X-Forwarded-For');
+    } else {
+        return c.env.info.remoteAddr.hostname;
+    }
+}
+
+apiRouter.use('*', async (c, next) => {
+    const clientIp = getClientIp(c);
+    console.log(clientIp);
+    if (clientIp == null || !ipRangeCheck(clientIp, CONFIG.apiAccessIpWhitelist)) {
+        c.status(403);
+        return c.body(null);
+    }
+    await next();
+});
 
 apiRouter.use('*', authenticationMiddleware);
 apiRouter.use('*', async (c, next) => {
