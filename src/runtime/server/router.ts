@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import { serveStatic } from 'hono/middleware';
 
 import { Registry } from './Registry.ts';
-import { apiRouter } from '../api/linkApiRouter.ts';
+import { apiRouter } from '../api/apiRouter.ts';
 import { Bindings } from '../server/TempLinkSrv.ts';
 
 export const router = new Hono<{ Bindings: Bindings }>();

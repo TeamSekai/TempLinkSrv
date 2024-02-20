@@ -11,7 +11,7 @@ import { resultError } from './api.ts';
 import { Bindings } from '../server/TempLinkSrv.ts';
 import { CONFIG } from '../../setup/index.ts';
 
-export const apiRouter = new Hono<{ Bindings: Bindings }>();
+export const linkApiRouter = new Hono<{ Bindings: Bindings }>();
 
 function getClientIp(c: Context<{ Bindings: Bindings }>) {
     if (CONFIG.useXForwardedFor) {
@@ -21,7 +21,7 @@ function getClientIp(c: Context<{ Bindings: Bindings }>) {
     }
 }
 
-apiRouter.use('*', async (c, next) => {
+linkApiRouter.use('*', async (c, next) => {
     const clientIp = getClientIp(c);
     console.log(clientIp);
     if (clientIp == null || !ipRangeCheck(clientIp, CONFIG.apiAccessIpWhitelist)) {
@@ -31,14 +31,14 @@ apiRouter.use('*', async (c, next) => {
     await next();
 });
 
-apiRouter.use('*', authenticationMiddleware);
-apiRouter.use('*', async (c, next) => {
+linkApiRouter.use('*', authenticationMiddleware);
+linkApiRouter.use('*', async (c, next) => {
     c.header('Content-Type', 'application/json');
     await next();
 });
 
-apiRouter.post(
-    '/links',
+linkApiRouter.post(
+    '/',
     async (c) => {
         const request = requireLinkRequest(await c.req.json());
         const result = await LinkAPI.instance.create(request);
@@ -49,8 +49,8 @@ apiRouter.post(
     },
 );
 
-apiRouter.get(
-    '/links/:linkId',
+linkApiRouter.get(
+    '/:linkId',
     async (c) => {
         const result = await LinkAPI.instance.get(c.req.param('linkId'));
         const response = resultOk(result);
@@ -59,8 +59,8 @@ apiRouter.get(
     },
 );
 
-apiRouter.delete(
-    '/links/:linkId',
+linkApiRouter.delete(
+    '/:linkId',
     async (c) => {
         await LinkAPI.instance.delete(c.req.param('linkId'));
         const response = resultOk(null);
@@ -69,7 +69,7 @@ apiRouter.delete(
     },
 );
 
-apiRouter.onError((e, c) => {
+linkApiRouter.onError((e, c) => {
     if (e instanceof ClientError) {
         c.status(e.status);
         const response = resultError({
