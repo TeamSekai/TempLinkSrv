@@ -1,4 +1,9 @@
 import { parse } from 'yaml';
+import { requireStringProperty } from '../common/objects.ts';
+import { requireNumberProperty } from '../common/objects.ts';
+import { requireChoiceProperty } from '../common/objects.ts';
+import { requireStringArrayProperty } from '../common/objects.ts';
+import { requireBooleanProperty } from '../common/objects.ts';
 
 const DEFAULT_CONFIG_FILENAME = '../resources/config.yml';
 const CONFIG_FILENAME = '../../config.yml';
@@ -23,7 +28,7 @@ export interface Config {
     readonly databaseName: string;
     readonly databaseAuthenticationSource: string;
     readonly apiAccessIpWhitelist: string[];
-    readonly useXForwardedFor: string;
+    readonly useXForwardedFor: boolean;
 }
 
 async function getConfigContent() {
@@ -36,14 +41,34 @@ async function getConfigContent() {
 }
 
 async function getConfig() {
-    const [result, config] = await Promise.all([
+    const [base, config] = await Promise.all([
         (async () => parse(await Deno.readTextFile(DEFAULT_CONFIG_PATH)))(),
         (async () => {
             const content = await getConfigContent();
             return content != null ? parse(content) : {};
         })(),
     ]);
-    return Object.freeze(Object.assign(result, config)) as Config;
+    Object.assign(base, config);
+    const result: Config = {
+        linkDomain: requireStringProperty(base, 'linkDomain'),
+        linkHostname: requireStringProperty(base, 'linkHostname'),
+        linkPort: requireNumberProperty(base, 'linkPort'),
+        linkIdCharacters: requireStringProperty(base, 'linkIdCharacters'),
+        linkIdLength: requireNumberProperty(base, 'linkIdLength'),
+        linkIdTrials: requireNumberProperty(base, 'linkIdTrials'),
+        linkExpirationPrepareTime: requireNumberProperty(base, 'linkExpirationPrepareTime'),
+        linkExpirationPrepareInterval: requireNumberProperty(base, 'linkExpirationPrepareInterval'),
+        databaseType: requireChoiceProperty(base, 'databaseType', ['sqlite', 'mongodb', 'volatile']),
+        databaseHostname: requireStringProperty(base, 'databaseHostname'),
+        databasePort: requireNumberProperty(base, 'databasePort'),
+        databaseUsername: requireStringProperty(base, 'databaseUsername'),
+        databasePassword: requireStringProperty(base, 'databasePassword'),
+        databaseName: requireStringProperty(base, 'databaseName'),
+        databaseAuthenticationSource: requireStringProperty(base, 'databaseAuthenticationSource'),
+        apiAccessIpWhitelist: requireStringArrayProperty(base, 'apiAccessIpWhitelist'),
+        useXForwardedFor: requireBooleanProperty(base, 'useXForwardedFor'),
+    };
+    return Object.freeze(result);
 }
 
 export const CONFIG = await getConfig();

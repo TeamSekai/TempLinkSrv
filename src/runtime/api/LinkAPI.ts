@@ -3,6 +3,7 @@ import { ClientError } from './errors.ts';
 import { CONFIG } from '../../setup/index.ts';
 import { LinkRecord } from '../database/LinkRecord.ts';
 import { ResponseValue } from './api.ts';
+import { requireNumberProperty, requireStringProperty } from '../../common/objects.ts';
 
 export interface LinkRequest {
     destination: string;
@@ -19,42 +20,18 @@ export interface LinkResource extends ResponseValue {
     expiration_date: number;
 }
 
-function hasProperty<K extends string>(o: object, property: K): o is { [V in K]: unknown } {
-    return property in o;
-}
-
-function requireProperty<K extends string>(o: object, property: K) {
-    if (!hasProperty(o, property)) {
-        throw new ClientError(`The object must have a property '${property}'`);
-    }
-    const value = o[property];
-    return value;
-}
-
-function requireStringProperty<K extends string>(o: object, property: K) {
-    const value = requireProperty(o, property);
-    if (typeof value != 'string') {
-        throw new ClientError(`The property '${property}' must be a string`);
-    }
-    return value;
-}
-
-function requireNumberProperty<K extends string>(o: object, property: K) {
-    const value = requireProperty(o, property);
-    if (typeof value != 'number') {
-        throw new ClientError(`The property '${property}' must be a number`);
-    }
-    return value;
-}
-
 export function requireLinkRequest(body: unknown): LinkRequest {
     if (!(body instanceof Object)) {
         throw new ClientError('The request body must be an object');
     }
-    return {
-        destination: requireStringProperty(body, 'destination'),
-        expirationTime: requireNumberProperty(body, 'expiration_time'),
-    };
+    try {
+        return {
+            destination: requireStringProperty(body, 'destination'),
+            expirationTime: requireNumberProperty(body, 'expiration_time'),
+        };
+    } catch (e) {
+        throw new ClientError(e.message);
+    }
 }
 
 export class LinkAPI {
