@@ -5,6 +5,7 @@ import { serveStatic } from 'hono/middleware';
 import { Registry } from './Registry.ts';
 import { apiRouter } from '../api/apiRouter.ts';
 import { Bindings } from '../server/TempLinkSrv.ts';
+import { linkRouter } from './linkRouter.tsx';
 
 export const router = new Hono<{ Bindings: Bindings }>();
 
@@ -17,12 +18,11 @@ router.use('*', async (_c, next) => {
     await next();
 });
 
-router.use(
-    '/',
-    serveStatic({
-        path: rootHtmlPath,
-    }),
-);
+router.use('/', serveStatic({ path: rootHtmlPath }));
+
+router.route('/api', apiRouter);
+
+router.route('/', linkRouter);
 
 router.get('/:linkId', async (c, next) => {
     const id = c.req.param('linkId');
@@ -36,8 +36,6 @@ router.get('/:linkId', async (c, next) => {
         return c.redirect(linkRecord.destination.toString(), 301);
     }
 });
-
-router.route('/api', apiRouter);
 
 router.get(
     '*',
