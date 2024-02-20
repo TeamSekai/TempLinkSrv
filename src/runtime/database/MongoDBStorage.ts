@@ -65,7 +65,7 @@ export class MongoDBStorage implements DataStorage {
                 $project: {
                     destination: 1,
                     expirationTime: 1,
-                    creationData: 1,
+                    creationDate: 1,
                     expirationDate: { $add: ['$creationDate', '$expirationTime'] },
                 },
             },
