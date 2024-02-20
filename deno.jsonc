@@ -1,5 +1,6 @@
 {
     "tasks": {
+        "setup": "/bin/bash tasks.sh setup",
         "start": "/bin/bash tasks.sh start",
         "pm2": "/bin/bash tasks.sh pm2",
         "check": "rm -rf ./cov_profile/ && deno test --coverage=cov_profile && deno coverage cov_profile --html"

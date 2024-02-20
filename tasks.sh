@@ -10,7 +10,9 @@ LOG_PREFIX="\e[36m[TempLinkSrv]\e[0m"
 ALLOWED_NET="$(deno run --allow-read=. --allow-write=. ${SETUP_FILENAME} | awk '$1 != "--" {print $0}')"
 INTERPRETER_ARGS="run --allow-read=. --allow-write=. --allow-env --allow-net=${ALLOWED_NET}" 
 
-if [ $1 == "start" ]; then
+if [ $1 == "setup" ]; then
+    exit 0
+elif [ $1 == "start" ]; then
     deno ${INTERPRETER_ARGS} ${MAIN_FILENAME}
 elif [ $1 == "pm2" ]; then
     pm2 --silent info ${ACTION_NAME}
@@ -23,4 +25,6 @@ elif [ $1 == "pm2" ]; then
         pm2 save
         echo -e "${LOG_PREFIX} Started ${MAIN_FILENAME} as ${ACTION_NAME}!"
     fi
+else
+    echo -e "${LOG_PREFIX} Invalid option: $1" >&2
 fi

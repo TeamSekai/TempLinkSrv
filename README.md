@@ -10,7 +10,7 @@
    $ cd TempLinkSrv
    $ deno task setup
    ```
-2. 設定ファイルを編集します。
+2. 設定ファイル (`config.yml`) を編集します。
 3. サーバーを起動します。
    ```sh
    $ deno task start
