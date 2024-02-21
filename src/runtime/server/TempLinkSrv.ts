@@ -27,12 +27,13 @@ export class TempLinkSrv {
         });
     }
 
-    public close() {
-        return Promise.all([
+    public async close() {
+        await Promise.all([
             Registry.instance.close(),
             ServerConsole.instance.close(),
             this.server.shutdown(),
         ]);
+        this.closed = true;
     }
 
     public get isClosed() {
